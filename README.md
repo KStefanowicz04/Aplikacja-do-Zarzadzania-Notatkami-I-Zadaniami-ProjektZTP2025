@@ -4,26 +4,3 @@ Aplikacja do zarządzania notatkami i zadaniami. Aplikacja umożliwia użytkowni
 
 
 UML Przedstawiony 12.12.2025, jest poprawnie
-
-
-Zadania do wykonania (najlepiej wykonać w kolejności):
-- ( ) Interfejs IWpis i klasa Wpis 
-- ( ) Klasa Notatka dziedzicząca z Wpis i jej Menedżer
-- ( ) Klasa Zadanie dziedzicząca z Wpis i jej Menedżer
-- ( ) Klasa Tag i jej Menedżer
-- ( ) Abstrakcyjna FabrykaWpisów i dziedziczące po niej Fabryki
-- ( ) Interfejs StanZadania i Stany klasy Zadanie
-- ( ) Interfejs IBuilder i Builder Klasy Zadanie
-Dekoratory:
-- ( ) Dekorator ogólny DekoratorWpisów i pochodny DekoratorTagowy
-- ( ) Poddekorator DekoratorZadań i pochodny DekoratorStanowy
-
-Funkcjonalności nie zawarte w UML:
-- ( ) Wyszukiwanie (po słowach kluczowych, po tagach, po terminach, itp.)
-- ( ) Grupowanie wyników wyszukiwania po tagach
-- ( ) Sortowanie według terminów, priorytetów
-- ( ) Generowanie raportów - wykonane zadania, zaległe zadania, czas do końca terminu 
-
-Funkcjonalności dodatkowe:
-- ( ) Kategorie
-- ( ) 
