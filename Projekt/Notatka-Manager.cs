@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Formats.Asn1;
 using System.Runtime.CompilerServices;
 
@@ -53,7 +55,9 @@ public partial class Program
     }
     // Klasa FabrykaNotatek - dziedziczy po abstrakcyjnej klasie FabrykaWpisow
     // Wzorzec Factory Method - odpowiada za tworzenie instancji Notatek
-    public class FabrykaNotatek : FabrykaWpisow
+    public class FabrykaNotatek : FabrykaWpisow 
+        
+        //!!! brak obecnie fabryki wpisów 
     {
         // Nadpisanie metody abstrakcyjnej UtworzWpis
         // Zwraca now¹ instancjê klasy Notatka
