@@ -12,17 +12,16 @@ public partial class Program
     }
 
     // Klasa abstrakcyjna Wpis - służy tylko do bycia bazą pod inne klasy
-    protected abstract class Wpis : IWpis
+    public abstract class Wpis : IWpis
     {
         // Pola klasy Wpis
         // id danego wpisu (generowane przy konstrukcji przez klasy pochodne Notatka i Zadanie, zapisywane w menedżerach)
-        private int id;
-        private string tytul;  // tytuł danego wpisu
-        private string tresc;  // treść danego wpisu
-        private DateTime dataUtworzenia;  // data utworzenia wpisu
-        private DateTime dataModyfikacji;  // data ostatniej edycji wpisu
-        // UWAGA - klasa 'Tag' jeszcze nie istnieje!
-        //private List<Tag> tagi;  // lista tagów przypisanych do danego wpisu
+        public int id { get; }
+        public string tytul { get; set; }  // tytuł danego wpisu
+        public string tresc { get; set; }  // treść danego wpisu
+        protected DateTime dataUtworzenia;  // data utworzenia wpisu
+        protected DateTime dataModyfikacji;  // data ostatniej edycji wpisu
+        protected List<Tag> tagi;  // lista tagów przypisanych do danego wpisu
 
 
         // Konstruktor
@@ -40,22 +39,42 @@ public partial class Program
             this.tresc = tresc;
         }
 
-        // UWAGA - klasa 'Tag' jeszcze nie istnieje!
         // Dodaje podany jako parametr 'tag' do Listy tagów 'tagi'
-        //protected void DodajTag(Tag tag)
-        //{
-        //    tagi.Add(tag);
-        //}
+        protected void DodajTag(Tag tag)
+        {
+            tagi.Add(tag);
+        }
 
-        // UWAGA - klasa 'Tag' jeszcze nie istnieje!
         // Usuwa podany jako parametr 'tag' z Listy tagów 'tagi'
-        //protected void UsunTag(Tag tag)
-        //{
-        //    tagi.Remove(tag);
-        //}
+        protected void UsunTag(Tag tag)
+        {
+            tagi.Remove(tag);
+        }
 
         // Abstrakcyjna metoda pochodząca od interfejsu IWpis;
         // Nic nie zwraca, metoda powinna zostać nadpisana przez klasy pochodne.
         public abstract string WypiszInformacje();
+    }
+
+
+
+    // Abstrakcyjna klasa fabryka wpisów; pochodzą z niej klasy FabrykaNotatek i FabrykaZadań
+    public abstract class FabrykaWpisow
+    {
+        // Konstruktor (pusty)
+        public FabrykaWpisow()
+        {
+
+        }
+
+
+        // Metody
+        //
+        // Metoda fabrykująca wpis (Notatkę lub Zadanie)
+        // Tutaj metoda jest pusta, zawartość powinna być nadpisana przez pochodne fabryki.
+        public virtual Wpis UtworzWpis(string tytul, string tresc, List<Tag> tagi)
+        {
+            return null;
+        }
     }
 }

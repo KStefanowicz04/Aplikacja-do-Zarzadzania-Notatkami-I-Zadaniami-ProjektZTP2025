@@ -12,21 +12,27 @@ public partial class Program
         // Menu główne
         while (true)
         {
-            Console.WriteLine("\n\nWybierz zadanie:\n1: (zadanie 1, zestaw d; podpunkty II i V)\n2: (zadanie 3)\n3: (zadanie 5)");
+            Console.WriteLine("\n\nWybierz komendę:\n1: (co robi 1?)\n2: (co robi 2?)\n3: (co robi 3?)");
             string command = Console.ReadLine();  // Odczytuje komendę z klawiatury - może to być liczba albo słowo.
 
             switch (command)
             {
                 // Przykładowa komenda 1
-                case "komenda1":
-                    //tu_idzie_nazwa_funkcji();  // przykładowe wyowłanie funkcji
-                    Console.WriteLine("Wywołano komendę1");
+                case "1":
+                    //tu_idzie_nazwa_funkcji();  // przykładowe wywołanie funkcji
+                    Console.WriteLine("Wywołano komendę 1");
                     break;
 
                 // Przykładowa komenda 2
-                case "komenda2":
-                    //tu_idzie_nazwa_funkcji();  // przykładowe wyowłanie funkcji
-                    Console.WriteLine("Wywołano komendę2");
+                case "2":
+                    //tu_idzie_nazwa_funkcji();  // przykładowe wywołanie funkcji
+                    Console.WriteLine("Wywołano komendę 2");
+                    break;
+
+                // Przykładowa komenda 3
+                case "3":
+                    //tu_idzie_nazwa_funkcji();  // przykładowe wywołanie funkcji
+                    Console.WriteLine("Wywołano komendę 3");
                     break;
 
                 // W przypadku podania nieodpowiedniej komendy, należy wpisać coś innego.
