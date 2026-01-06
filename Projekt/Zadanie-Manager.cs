@@ -38,6 +38,10 @@ public partial class Program
             this.priorytet = priorytet;
             this.termin = termin;
         }
+        public void OznaczJakoWykonane()
+        {
+            stan = StanZadania.Wykonane;
+        }
 
     }
 }
