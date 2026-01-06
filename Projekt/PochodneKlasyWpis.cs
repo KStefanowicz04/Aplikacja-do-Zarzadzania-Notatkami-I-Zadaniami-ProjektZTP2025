@@ -39,6 +39,17 @@ public partial class Program
             this.tresc = tresc;
         }
 
+        // Ta sama metoda co powyżej, ale z dodatkowymi parametrami dostępnymi tylko dla klasy Zadanie
+        public virtual void Edytuj(string tytul, string tresc, Priorytet priorytet, DateTime termin)
+        {
+            // Wywołanie zwykłej metody Edytuj.
+            Edytuj(tytul, tresc);
+
+            // Tu powinien znajdować się kod dla klasy Zadanie;
+            // należy wstawić go w pliku z klasą Zadanie, NIE tutaj w Wpis
+        }
+
+
         // Dodaje podany jako parametr 'tag' do Listy tagów 'tagi'
         protected void DodajTag(Tag tag)
         {
@@ -70,9 +81,16 @@ public partial class Program
 
         // Metody
         //
-        // Metoda fabrykująca wpis (Notatkę lub Zadanie)
-        // Tutaj metoda jest pusta, zawartość powinna być nadpisana przez pochodne fabryki.
+        // Metoda fabrykująca wpis (specyficzna dla Notatki)
+        // Tutaj metoda jest pusta, zawartość powinna być nadpisana przez pochodną fabrykę.
         public virtual Wpis UtworzWpis(string tytul, string tresc, List<Tag> tagi)
+        {
+            return null;
+        }
+
+        // Metoda fabrykująca wpis (specyficzna dla Zadań)
+        // Tutaj metoda jest pusta, zawartość powinna być nadpisana przez pochodną fabrykę.
+        public virtual Wpis UtworzWpis(string tytul, string tresc, Priorytet priorytet, DateTime termin, List<Tag> tagi)
         {
             return null;
         }

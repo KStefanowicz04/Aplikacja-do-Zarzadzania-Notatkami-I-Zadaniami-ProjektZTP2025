@@ -30,8 +30,8 @@ abstract class Wpis {
     - id: int
     - tytuł: String
     - treść: String
-    - dataUtworzenia: Date
-    - dataModyfikacji: Date
+    - dataUtworzenia: DateTime
+    - dataModyfikacji: DateTime
     - tagi: List<Tag>
 
     # Wpis(tytuł: String, treść: String) : IWpis
@@ -109,7 +109,7 @@ class Zadanie {
         ' Obecny stan:
     - stan: StanZadania
     - priorytet: Priorytet
-    - termin: Date
+    - termin: DateTime
 
     + Zadanie(stan: StanZadania, priorytet: Priorytet, termin: Date, stan: StanZadania) : base(tytuł: String, treść: String)
     + Edytuj(tytuł: String, treść: String, priorytet: Priorytet, termin: Date): void <<override>>
@@ -129,7 +129,7 @@ interface IZadanieBuilder <<Builder>> {
     + UstawTreść(treść: String): ZadanieBuilder
     + UstawStan(stan: StanZadania): ZadanieBuilder
     + UstawPriorytet(priorytet: Priorytet): ZadanieBuilder
-    + UstawTermin(termin: Date): ZadanieBuilder
+    + UstawTermin(termin: DateTime): ZadanieBuilder
     + UstawTagi(tagi: List<Tag>): ZadanieBuilder
 }
 
@@ -139,7 +139,7 @@ class ZadanieBuilder <<Builder>> {
     - treść: String
     - stan: StanZadania
     - priorytet: Priorytet
-    - termin: Date
+    - termin: DateTime
     - tagi: List<Tag>
 
     + ZadanieBuilder() : IZadanieBuilder
@@ -147,7 +147,7 @@ class ZadanieBuilder <<Builder>> {
     + UstawTreść(treść: String): ZadanieBuilder
     + UstawStan(stan: StanZadania): ZadanieBuilder
     + UstawPriorytet(priorytet: Priorytet): ZadanieBuilder
-    + UstawTermin(termin: Date): ZadanieBuilder
+    + UstawTermin(termin: DateTime): ZadanieBuilder
     + UstawTagi(tagi: List<Tag>): ZadanieBuilder
     + Build(): Zadanie
 }
