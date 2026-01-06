@@ -46,5 +46,12 @@ public partial class Program
         {
             this.stan = stan;
         }
+        public bool SprawdzCzyZalegle()
+        {
+            if (stan == StanZadania.Wykonane)
+                return false;
+
+            return DateTime.Now > termin;
+        }
     }
 }
