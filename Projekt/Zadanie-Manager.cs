@@ -42,6 +42,9 @@ public partial class Program
         {
             stan = StanZadania.Wykonane;
         }
-
+        public void ZmienStan(StanZadania stan)
+        {
+            this.stan = stan;
+        }
     }
 }
