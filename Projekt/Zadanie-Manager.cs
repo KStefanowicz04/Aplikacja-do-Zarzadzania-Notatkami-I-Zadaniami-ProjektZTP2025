@@ -1,7 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Formats.Asn1;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using static Program;
 
 public partial class Program
 {
@@ -31,11 +33,23 @@ public partial class Program
 
 
         // Konstruktor
-        public Zadanie(string tytul, string tresc, IStanZadania stan, Priorytet priorytet, DateTime termin) : base(tytul, tresc)
+        public Zadanie(string tytul, string tresc, IStanZadania stan, Priorytet priorytet, DateTime termin, List<Tag> tagi) : base(tytul, tresc)
         {
+            // Manager zadañ decyduje jaki numer ID zostanie przypisany do danego Zadania
+            id = MenedzerZadan.GetterInstancji().WybierzIDZadania();
+
+            // Domyœlnie stan jest Aktywny - mo¿e nale¿y to usun¹æ z parametrów Konstruktora?
+            if (stan != null) this.stan = stan;
+            else this.stan = new StanAktywne();
+
             this.stan = stan;
             this.priorytet = priorytet;
             this.termin = termin;
+
+            if (tagi != null)
+                this.tagi = tagi;
+            else
+                this.tagi = new List<Tag>();
         }
 
 
@@ -95,7 +109,20 @@ public partial class Program
         // Wypisuje podstawowe informacje o zadaniu
         public override string WypiszInformacje()
         {
-            return $"[ZADANIE] {tytul} | {priorytet} | Termin: {termin:d} | Stan: {stan.GetType().Name}";
+            string tagiStr;
+
+            if (tagi != null && tagi.Count > 0)
+                tagiStr = string.Join(", ", tagi.Select(t => t.nazwa));
+            else
+                tagiStr = "Brak tagów";
+
+            return $"[ZADANIE] ID: {id} | Tytu³: {tytul} | Treœæ: {tresc} | Priorytet: {priorytet} | Termin: {termin:d} | Stan: {stan.GetType().Name} | tagi: {tagiStr}";
+        }
+
+        // Nadpisanie ToString() dla wygodnego wypisywania notatki
+        public override string ToString()
+        {
+            return WypiszInformacje();
         }
     }
 
@@ -177,7 +204,8 @@ public partial class Program
         private static MenedzerZadan instancja;  // Singleton; instancja Fabryki Zadañ
         private FabrykaZadan fabryka;  // WskaŸnik na Fabrykê zadañ
         private List<Zadanie> zadania;  // Lista wszystkich Zadañ w programie
-       
+        private HashSet<int> IDZadan = new();  // HashSet unikalnych ID Zadañ. ID siê nie powtarzaj¹.
+
 
         // Prywatny Konstruktor
         private MenedzerZadan()
@@ -198,31 +226,66 @@ public partial class Program
         }
 
         // Utworzenie nowego Zadania poprzez Fabrykê 
-        public void UtworzZadaniePrzezFabryke(string tytul, string tresc, Priorytet priorytet, DateTime termin, List<string> tagi)
+        public void UtworzZadaniePrzezFabryke(string tytul, string tresc, Priorytet priorytet, DateTime termin, List<string> tagi = null)
         {
             // Lista stringów 'tagi' podana do metody zawiera nazwy Tagów, które powinny zostaæ przypisane do
-            // nowo utworzonej notatki. Te Tagi nie koniecznie istniej¹, wiêc zajmie siê tym Fabryka.
+            // nowo utworzonej notatki. Te tagi nie koniecznie istniej¹, wiêc zajmie siê tym Fabryka.
 
             // Utworzenie Zadania poprzez Fabrykê
-            var zadanie = (Zadanie)fabryka.UtworzWpis(tytul, tresc, priorytet, termin, tagi);
-
+            Zadanie zadanie = (Zadanie)fabryka.UtworzWpis(tytul, tresc, priorytet, termin, tagi);
             // Dodajemy nowe Zadanie do listy mened¿era
             zadania.Add(zadanie);
         }
 
-        // Usuniêcie danego Zadania z 
+        // Metoda wybieraj¹ca unikalne ID dla Zadania, zwraca to ID.
+        public int WybierzIDZadania()
+        {
+            int id = 0;  // Nowe ID zaczyna odliczanie od 0
+            // Pêtla od 0 w górê, przez HashSet ID, a¿ znajdziemy nieu¿yte ID.
+            while (IDZadan.Contains(id))
+            {
+                id++;
+            }
+
+            // Dane ID nie jest u¿ywane, dodajemy je do HashSetu.
+            IDZadan.Add(id);
+            return id;
+        }
+
+        // Usuwa Zadanie z listy i wypisuje jego zawartoœæ
         public void UsunZadanie(Zadanie zadanie)
         {
-            zadania.Remove(zadanie);
+            if (zadania.Remove(zadanie))
+            {
+                Console.WriteLine("Usuniêto zadanie:");
+                WypiszZadanie(zadanie);
+            }
+            else
+            {
+                Console.WriteLine("Nie znaleziono zadania do usuniêcia.");
+            }
         }
 
         // Wypisanie zawartoœci wszystkich zadañ
-        public void WypiszZadanie()
+        public void WypiszZadanie(Zadanie zadanie)
         {
-            foreach (var z in zadania)
+            if (zadanie != null)
             {
-                Console.WriteLine(z.WypiszInformacje());
+                Console.WriteLine(zadanie.ToString());
             }
+        }
+
+        // Wyszukiwanie Zadania po ID
+        public Zadanie WyszukajZadanie(int id)
+        {
+            foreach (Zadanie z in zadania)
+            {
+                if (z.id == id)
+                {
+                    return z;
+                }
+            }
+            return null;
         }
 
         // Wyszukuje zadanie po podanej frazie
@@ -266,6 +329,19 @@ public partial class Program
 
             return zalegle;
         }
+
+        // Wypisuje wszystkie Zadania
+        public void WypiszZadania()
+        {
+            // Dzia³¹ tylko gdy Lista zadañ nie jest pusta
+            if (zadania.Count > 0)
+            {
+                foreach (Zadanie z in zadania)
+                {
+                    WypiszZadanie(z);
+                }
+            }
+        }
     }
 
 
@@ -279,8 +355,13 @@ public partial class Program
         }
 
 
+
+
+
+
+
         // Nadpisanie metody fabrykuj¹cej wpis
-        public override Wpis UtworzWpis(string tytul, string tresc, List<string> nazwyTagow)
+        public override Wpis UtworzWpis(string tytul, string tresc, Priorytet priorytet, DateTime termin, List<string> nazwyTagow)
         {
             List<Tag> tagi = null;
             if (nazwyTagow != null)
@@ -299,14 +380,10 @@ public partial class Program
                 }
             }
 
-
-            // Domyœlne wartoœci Zadania, mo¿na póŸniej rozszerzyæ parametry
             IStanZadania domyslnyStan = new StanAktywne();
-            Priorytet domyslnyPriorytet = Priorytet.Niski;
-            DateTime domyslnyTermin = DateTime.Now.AddDays(7); // Domyœlnie tydzieñ od dzisiaj
 
             // Utworzenie i zwrócenie nowego Zadania na podstawie powy¿szych danych
-            return new Zadanie(tytul, tresc, domyslnyStan, domyslnyPriorytet, domyslnyTermin);
+            return new Zadanie(tytul, tresc, domyslnyStan, priorytet, termin, tagi);
         }
 
        

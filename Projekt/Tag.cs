@@ -103,9 +103,9 @@ public partial class Program
         }
 
         // Wypisuje wszystkie tagi w liście tagów po przecinku
-        public void WypiszTagi()
+        public void Wypisztagi()
         {
-            Console.WriteLine("Tagi: ");
+            Console.WriteLine("tagi: ");
             foreach (Tag tag in tagi)
             {
                 Console.Write($"{tag}, ");

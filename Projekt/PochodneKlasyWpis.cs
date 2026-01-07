@@ -21,7 +21,7 @@ public partial class Program
         public string tresc { get; set; }  // treść danego wpisu
         protected DateTime dataUtworzenia;  // data utworzenia wpisu
         protected DateTime dataModyfikacji;  // data ostatniej edycji wpisu
-        protected List<Tag> tagi;  // lista tagów przypisanych do danego wpisu
+        public List<Tag> tagi { get; set; }  // lista tagów przypisanych do danego wpisu
 
 
         // Konstruktor
@@ -87,14 +87,14 @@ public partial class Program
         //
         // Metoda fabrykująca wpis (specyficzna dla Notatki)
         // Tutaj metoda jest pusta, zawartość powinna być nadpisana przez pochodną fabrykę.
-        public virtual Wpis UtworzWpis(string tytul, string tresc, List<string> tagi)
+        public virtual Wpis UtworzWpis(string tytul, string tresc, List<string> nazwyTagow)
         {
             return null;
         }
 
         // Metoda fabrykująca wpis (specyficzna dla Zadań, bo te potrzebują więcej danych)
         // Tutaj metoda jest pusta, zawartość powinna być nadpisana przez pochodną fabrykę.
-        public virtual Wpis UtworzWpis(string tytul, string tresc, Priorytet priorytet, DateTime termin, List<string> tagi)
+        public virtual Wpis UtworzWpis(string tytul, string tresc, Priorytet priorytet, DateTime termin, List<string> nazwyTagow)
         {
             return null;
         }

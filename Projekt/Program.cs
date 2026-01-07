@@ -13,42 +13,53 @@ public partial class Program
         MenedzerZadan menedzerZadan = MenedzerZadan.GetterInstancji();
         MenedzerTagow menedzerTagow = MenedzerTagow.GetterInstancji();
 
-        // Przykładowe Tagi
+        // Przykładowe tagi
         menedzerTagow.UtworzTag("Ain");
         menedzerTagow.UtworzTag("Betelgeuse");
         menedzerTagow.UtworzTag("Capella");
 
         // Przykładowe Notatki
         menedzerNotatek.UtworzNotatkePrzezFabryke("Zupełnie pusta notatka", "");
-        menedzerNotatek.UtworzNotatkePrzezFabryke("Pusta notatka z tagami", "", new List<String> { "Ain" });
-        menedzerNotatek.UtworzNotatkePrzezFabryke("Lorem ipsum", "dolor sit amet", new List<String> { "Ain", "Betelgeuse" });\
+        menedzerNotatek.UtworzNotatkePrzezFabryke("Pusta notatka z tagami", "", new List<String>{ "Ain" });
+        menedzerNotatek.UtworzNotatkePrzezFabryke("Lorem ipsum", "dolor sit amet", new List<String>{ "Ain", "Betelgeuse" });
 
         // Przykładowe Zadania
-
+        menedzerZadan.UtworzZadaniePrzezFabryke("Zadanie z wysokim priorytetem bez Tagów", "",
+            Priorytet.Wysoki, new DateTime(2026, 2, 12));
+        menedzerZadan.UtworzZadaniePrzezFabryke("Zadanie z niskim pr. z Tagami", "Ma podany jeden nieistniejący domyślnie Tag",
+            Priorytet.Niski, new DateTime(2021, 12, 28), new List<string>{ "Betelgeuse", "Capella", "Sirius" });
 
         // Menu główne
         while (true)
         {
-            Console.WriteLine("\n\nWybierz komendę (wpisz liczbę):\n1: Wypisz notatki\n2: Wypisz tagi\n3: Dodaj nowy tag");
-            Console.WriteLine("4. Usuń tag\n5. Dodaj nową notatkę\n6. Usuń notatkę");
+            Console.WriteLine("\n\nWybierz komendę (wpisz liczbę):\n1: Wypisz notatki\n2: Wypisz zadania\n3: Wypisz tagi");
+            Console.WriteLine("4: Dodaj nowy tag\n5. Usuń tag\n6. Dodaj nową notatkę\n7. Usuń notatkę");
+            Console.WriteLine("8. Dodaj nowe zadanie przez Fabrykę\n9. Usuń zadanie");
             string command = Console.ReadLine();  // Odczytuje komendę z klawiatury.
 
             switch (command)
             {
-                // Wypisanie notatek
+                // Wypisanie Notatek
                 case "1":
-                    menedzerNotatek.WypiszWszystkieNotatki();
+                    menedzerNotatek.WypiszNotatki();
 
                     break;
 
-                // Wypisanie tagów
+                // Wypisanie Zadań
                 case "2":
-                    menedzerTagow.WypiszTagi();
+                    menedzerZadan.WypiszZadania();
 
                     break;
 
-                // Dodanie nowego Tagu
+                // Wypisanie Tagów
                 case "3":
+                    menedzerTagow.Wypisztagi();
+
+                    break;
+
+                
+                // Dodanie nowego Tagu
+                case "4":
                     Console.WriteLine("Podaj nazwę nowego Tagu do utworzenia:");
                     command = Console.ReadLine();
 
@@ -57,7 +68,7 @@ public partial class Program
                     break;
 
                 // Usunięcie danego tagu
-                case "4":
+                case "5":
                     Console.WriteLine("Podaj nazwę Tagu do usunięcia:");
                     command = Console.ReadLine();
 
@@ -66,7 +77,7 @@ public partial class Program
                     break;
 
                 // Dodanie nowej notatki
-                case "5":
+                case "6":
                     Console.WriteLine("Podaj tytuł nowej Notatki:");
                     string tytul = Console.ReadLine();
                     Console.WriteLine("Podaj treść nowej Notatki:");
@@ -96,13 +107,75 @@ public partial class Program
                     break;
 
                 // Usunięcie danej Notatki
-                case "6":
+                case "7":
                     Console.WriteLine("Podaj ID Notatki do usunięcia:");
                     command = Console.ReadLine();
 
                     // UWAGA: Ten kod tutaj należyrozbudować i użyć TryParse,
                     // bo może być że ktoś poda znak inny niż cyfra do 'command'
-                    menedzerNotatek.UsunNotatke(menedzerNotatek.WyszukajNotatki(Int32.Parse(command)));
+                    menedzerNotatek.UsunNotatke(menedzerNotatek.WyszukajNotatke(Int32.Parse(command)));
+
+                    break;
+
+                // Dodanie nowego zadania przez Fabrykę
+                case "8":
+                    Console.WriteLine("Podaj tytuł nowego Zadania:");
+                    tytul = Console.ReadLine();
+                    Console.WriteLine("Podaj treść nowego Zadania:");
+                    tresc = Console.ReadLine();
+
+                    // Wybranie priorytetu danego Zadania
+                    Console.WriteLine("Wybierz priorytet nowego Zadania (wpisz liczbę):\n1. Niski\n2. Średni\n3. Wysoki\n");
+                    string prioString = Console.ReadLine();
+                    Priorytet prio;
+
+                    if (prioString == "1") prio = Priorytet.Niski;
+                    else if (prioString == "2") prio = Priorytet.Sredni;
+                    else if (prioString == "3") prio = Priorytet.Wysoki;
+                    // Podano niepoprawną wartość priorytetu
+                    else
+                    {
+                        Console.WriteLine("Podano niepoprawną wartość.");
+                        break;
+                    }
+
+                    // Wybranie terminu Zadania
+                    Console.WriteLine("Podaj termin wykonania Zadania (format: \"rok, miesiąc, dzień\"):");
+                    string dataTerminString = Console.ReadLine();
+                    DateTime dataTermin = DateTime.Parse(dataTerminString);
+
+
+                    // Pętla dodawania tagów
+                    listaTagowNotatki = new List<string>();  // Pomocnicza lista nazw tagów dla danej Notatki
+                    dodawanieTagow = true;
+                    while (dodawanieTagow == true)
+                    {
+                        Console.WriteLine("Podaj Tag nowej Notatki (wstaw pusty znak żeby przerwać):");
+                        string nazwaTagu = Console.ReadLine();
+
+                        // Pusty znak przerywa dodawanie tagów
+                        if (nazwaTagu == "") break;
+                        // Jeśli nie podano pustego znaku, dodajemy kolejny Tag
+                        else
+                        {
+                            menedzerTagow.UtworzTag(nazwaTagu);  // Utworzenie danego Tagu jeśli jeszcze nie istnieje
+                            listaTagowNotatki.Add(nazwaTagu);  // Dodanie danego Tagu do Listy pomocniczej
+                        }
+                    }
+
+                    // Utworzenie Notatki na podstawie powyższych danych.
+                    menedzerZadan.UtworzZadaniePrzezFabryke(tytul, tresc, prio, dataTermin, listaTagowNotatki);
+
+                    break;
+
+                // Usunięcie danego Zadania
+                case "9":
+                    Console.WriteLine("Podaj ID Zadania do usunięcia:");
+                    command = Console.ReadLine();
+
+                    // UWAGA: Ten kod tutaj należy rozbudować i użyć TryParse,
+                    // bo może być że ktoś poda znak inny niż cyfra do 'command'
+                    menedzerZadan.UsunZadanie(menedzerZadan.WyszukajZadanie(Int32.Parse(command)));
 
                     break;
 
