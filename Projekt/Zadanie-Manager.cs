@@ -198,12 +198,15 @@ public partial class Program
         }
 
         // Utworzenie nowego Zadania poprzez Fabrykê 
-        public void UtworzZadaniePrzezFabryke(string tytul,string tresc,Priorytet priorytet,DateTime termin,List<Tag> tagi)
+        public void UtworzZadaniePrzezFabryke(string tytul, string tresc, Priorytet priorytet, DateTime termin, List<string> tagi)
         {
-            // Wywo³ujemy fabrykê, tworzymy Zadanie
+            // Lista stringów 'tagi' podana do metody zawiera nazwy Tagów, które powinny zostaæ przypisane do
+            // nowo utworzonej notatki. Te Tagi nie koniecznie istniej¹, wiêc zajmie siê tym Fabryka.
+
+            // Utworzenie Zadania poprzez Fabrykê
             var zadanie = (Zadanie)fabryka.UtworzWpis(tytul, tresc, priorytet, termin, tagi);
 
-            // Dodajemy do listy mened¿era
+            // Dodajemy nowe Zadanie do listy mened¿era
             zadania.Add(zadanie);
         }
 
@@ -277,13 +280,32 @@ public partial class Program
 
 
         // Nadpisanie metody fabrykuj¹cej wpis
-        public override Wpis UtworzWpis(string tytul, string tresc, List<Tag> tagi)
+        public override Wpis UtworzWpis(string tytul, string tresc, List<string> nazwyTagow)
         {
+            List<Tag> tagi = null;
+            if (nazwyTagow != null)
+            {
+                // Mened¿erTagów zajmuje siê znalezieniem i zwróceniem odpowiednich Tagów.
+                tagi = new List<Tag>();  // Rzeczywista Lista Tagów, przekazywana do Zadania
+                foreach (string nazwaTagu in nazwyTagow)
+                {
+                    // Pytamy Mened¿eraTagów o zwrócenie wskaŸnika na dany Tag.
+                    // Jeœli zwróci 'null', dany Tag nie istnieje, wiêc go nie dodajemy
+                    Tag tag = MenedzerTagow.GetterInstancji().ZwrocTag(nazwaTagu);
+                    if (tag != null)
+                    {
+                        tagi.Add(tag);
+                    }
+                }
+            }
+
+
             // Domyœlne wartoœci Zadania, mo¿na póŸniej rozszerzyæ parametry
             IStanZadania domyslnyStan = new StanAktywne();
             Priorytet domyslnyPriorytet = Priorytet.Niski;
             DateTime domyslnyTermin = DateTime.Now.AddDays(7); // Domyœlnie tydzieñ od dzisiaj
 
+            // Utworzenie i zwrócenie nowego Zadania na podstawie powy¿szych danych
             return new Zadanie(tytul, tresc, domyslnyStan, domyslnyPriorytet, domyslnyTermin);
         }
 

@@ -156,6 +156,7 @@ class ZadanieBuilder <<Builder>> {
 
 ' Menedżer tagów tworzy je, usuwa, ma listę wszystkich unikalnych tagów.
 class MenedżerTagów <<Singleton>> {
+    - instancja: MenedżerTagów
     - tagi: List<Tag>
 
     - MenedżerTagów()
@@ -267,8 +268,8 @@ Zadanie "0..*" -- "0..*" Tag
 Zadanie ..> Priorytet : używa
 
 ' DEKORATORY
-' Abstrakcyjny DekoratorWpisów dziedziczy po Wpisie
-Wpis <|-- DekoratorWpisów : dziedziczy
+' Abstrakcyjny DekoratorWpisów dziedziczy po IWpisie
+IWpis <|-- DekoratorWpisów : dziedziczy
 ' Konkretny DekoratorTagowy dziedziczy po ogólnym DekoratorzeWpisów
 DekoratorWpisów <|-- DekoratorTagowy : dziedziczy
 ' Ogólny DekoratorZadań dziedziczy po ogólnym DekoratorzeWpisów

@@ -72,7 +72,11 @@ public partial class Program
     // Abstrakcyjna klasa fabryka wpisów; pochodzą z niej klasy FabrykaNotatek i FabrykaZadań
     public abstract class FabrykaWpisow
     {
-        // Konstruktor (pusty)
+        // Fabryki korzystają z ManageraTagów do prostszego dodawania Tagów przy tworzeniu Wpisu
+        MenedzerTagow menedzerTagow = MenedzerTagow.GetterInstancji();
+
+
+        // Konstruktor (tutaj: pusty)
         public FabrykaWpisow()
         {
 
@@ -83,14 +87,14 @@ public partial class Program
         //
         // Metoda fabrykująca wpis (specyficzna dla Notatki)
         // Tutaj metoda jest pusta, zawartość powinna być nadpisana przez pochodną fabrykę.
-        public virtual Wpis UtworzWpis(string tytul, string tresc, List<Tag> tagi)
+        public virtual Wpis UtworzWpis(string tytul, string tresc, List<string> tagi)
         {
             return null;
         }
 
-        // Metoda fabrykująca wpis (specyficzna dla Zadań)
+        // Metoda fabrykująca wpis (specyficzna dla Zadań, bo te potrzebują więcej danych)
         // Tutaj metoda jest pusta, zawartość powinna być nadpisana przez pochodną fabrykę.
-        public virtual Wpis UtworzWpis(string tytul, string tresc, Priorytet priorytet, DateTime termin, List<Tag> tagi)
+        public virtual Wpis UtworzWpis(string tytul, string tresc, Priorytet priorytet, DateTime termin, List<string> tagi)
         {
             return null;
         }

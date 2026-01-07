@@ -62,20 +62,21 @@ public partial class Program
 
 
         // Tworzy nowy tag i dodaje go do listy tagów (jeśli dany tag jeszcze nie istnieje).
-        // Zwraca 'true' jeśli dodanie się powiodło
-        public bool UtworzTag(string nazwa)
+        // Zwraca dany Tag jeśli dodanie się powiodło, albo 'null' jeśli nie.
+        public Tag UtworzTag(string nazwa)
         {
             // Jeśli takiego Tagu jeszcze nie ma w Liście tagów...
             if (ZwrocTag(nazwa) == null)
             {
+                // Tworzymy taki Tag i go zwracamy
                 Console.WriteLine();
                 Tag nowyTag = new Tag(nazwa);
                 tagi.Add(nowyTag);
 
-                return true;
+                return nowyTag;
             }
 
-            return false;
+            return null;
         }
 
         // Zwraca Tag z Listy Tagów o danej nazwie

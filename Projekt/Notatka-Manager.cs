@@ -59,9 +59,27 @@ public partial class Program
     public class FabrykaNotatek : FabrykaWpisow
     {
         // Nadpisanie metody abstrakcyjnej UtworzWpis
-        // Zwraca now¹ instancjê klasy Notatka
-        public override Wpis UtworzWpis(string tytul, string tresc, List<Tag> tagi)
+        // Zwraca now¹ instancjê klasy Notatka. Przyjmuje Listê stringów 'tagi', która jest przekazywana do MenedzeraTagów
+        public override Wpis UtworzWpis(string tytul, string tresc, List<string> nazwyTagow)
         {
+            List<Tag> tagi = null;
+            if (nazwyTagow != null)
+            {
+                // Mened¿erTagów zajmuje siê znalezieniem i zwróceniem odpowiednich Tagów.
+                tagi = new List<Tag>();  // Rzeczywista Lista Tagów, przekazywana do Notatki
+                foreach (string nazwaTagu in nazwyTagow)
+                {
+                    // Pytamy Mened¿eraTagów o zwrócenie wskaŸnika na dany Tag.
+                    // Jeœli zwróci 'null', dany Tag nie istnieje, wiêc go nie dodajemy
+                    Tag tag = MenedzerTagow.GetterInstancji().ZwrocTag(nazwaTagu);
+                    if (tag != null)
+                    {
+                        tagi.Add(tag);
+                    }
+                }
+            }
+
+            // W³aœciwe utworzenie Notatki
             return new Notatka(tytul, tresc, tagi);
         }
     }
@@ -94,8 +112,11 @@ public partial class Program
 
         // Tworzy now¹ notatkê przez fabrykê i dodaje j¹ do listy
         // Domyœlnie Lista tagów jest 'null'; to oznacza, ¿e Notatka nie musi mieæ ¿adnych tagów.
-        public void UtworzNotatkePrzezFabryke(string tytul, string tresc, List<Tag> tagi = null)
+        public void UtworzNotatkePrzezFabryke(string tytul, string tresc, List<string> tagi = null)
         {
+            // Lista stringów 'tagi' podana do metody zawiera nazwy Tagów, które powinny zostaæ przypisane do
+            // nowo utworzonej notatki. Te Tagi nie koniecznie istniej¹, wiêc zajmie siê tym Fabryka.
+
             Notatka nowa = (Notatka)fabryka.UtworzWpis(tytul, tresc, tagi);
             notatki.Add(nowa);
         }
