@@ -34,17 +34,10 @@ public partial class Program
         }
 
         // Nadpisanie metody abstrakcyjnej WypiszInformacje() z klasy Wpis
-        // Zwraca wszystkie informacje o notatce w formie stringa
+        // Zwraca wszystkie informacje o notatce w formie stringa (oprócz tagów, do tego s³u¿y DekoratorTagowy!)
         public override string WypiszInformacje()
         {
-            string tagiStr;
-
-            if (tagi != null && tagi.Count > 0)
-                tagiStr = string.Join(", ", tagi.Select(t => t.nazwa));
-            else
-                tagiStr = "Brak tagów";
-
-            return $"[NOTATKA] ID: {id} | Tytu³: {tytul} | Treœæ: {tresc} | Ulubiona: {Ulubiona} | tagi: {tagiStr}";
+            return $"[NOTATKA] ID: {id} | Tytu³: {tytul} | Treœæ: {tresc} | Ulubiona: {Ulubiona}";
         }
 
         // Nadpisanie ToString() dla wygodnego wypisywania notatki
@@ -151,12 +144,12 @@ public partial class Program
             }
         }
 
-        // Wywo³uje ToString() na obiekcie Notatka
+        // Wywo³uje WypiszInformacje() na podanym obiekcie Notatka
         public void WypiszNotatke(Notatka notatka)
         {
             if (notatka != null)
             {
-                Console.WriteLine(notatka.ToString());
+                Console.WriteLine(notatka.WypiszInformacje());
             }
         }
 

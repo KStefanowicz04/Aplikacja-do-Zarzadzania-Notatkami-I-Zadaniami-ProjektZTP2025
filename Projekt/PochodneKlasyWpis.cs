@@ -6,9 +6,9 @@ public partial class Program
     // Interfejs klasy Wpis
     public interface IWpis
     {
-        // Funkcja wypisująca informacje o danym Wpisie (Notatce lub Zadaniu).
+        // Metoda wypisująca informacje o danym Wpisie (Notatce lub Zadaniu).
         // Treść funkcji i wyniku zależy od klas pochodnych.
-        protected abstract string WypiszInformacje();
+        public abstract string WypiszInformacje();
     }
 
     // Klasa abstrakcyjna Wpis - służy tylko do bycia bazą pod inne klasy

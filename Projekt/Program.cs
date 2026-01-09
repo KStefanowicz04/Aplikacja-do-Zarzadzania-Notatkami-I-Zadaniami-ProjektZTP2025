@@ -35,6 +35,7 @@ public partial class Program
             Console.WriteLine("\n\nWybierz komendę (wpisz liczbę):\n1: Wypisz notatki\n2: Wypisz zadania\n3: Wypisz tagi");
             Console.WriteLine("4: Dodaj nowy tag\n5. Usuń tag\n6. Dodaj nową notatkę\n7. Usuń notatkę");
             Console.WriteLine("8. Dodaj nowe zadanie przez Fabrykę\n9. Usuń zadanie");
+            Console.WriteLine("10. Wypisz notatki wraz z ich tagami\n11. Wypisz zadania wraz z ich tagami");
             string command = Console.ReadLine();  // Odczytuje komendę z klawiatury.
 
             switch (command)
@@ -176,6 +177,34 @@ public partial class Program
                     // UWAGA: Ten kod tutaj należy rozbudować i użyć TryParse,
                     // bo może być że ktoś poda znak inny niż cyfra do 'command'
                     menedzerZadan.UsunZadanie(menedzerZadan.WyszukajZadanie(Int32.Parse(command)));
+
+                    break;
+
+                // Wypisz wybraną Notatkę z jej tagami
+                case "10":
+                    Console.WriteLine("Podaj ID Notatki do wypisania:");
+                    command = Console.ReadLine();
+                    Notatka not = menedzerNotatek.WyszukajNotatke(Int32.Parse(command));
+
+                    // DekoratorTagowy danej Notatki
+                    DekoratorTagowy deko = new DekoratorTagowy(not);
+                    // Wywołanie metody Dekoratora, który dodaje informacje o tagach danej Notatki do WypiszInformacje()
+                    Console.WriteLine( deko.WypiszInformacje() );  
+
+
+                    break;
+
+                // Wypisanie Zadań z ich tagami
+                case "11":
+                    Console.WriteLine("Podaj ID Zadania do wypisania:");
+                    command = Console.ReadLine();
+                    Zadanie zada = menedzerZadan.WyszukajZadanie(Int32.Parse(command));
+
+                    // DekoratorTagowy danego Zadania
+                    deko = new DekoratorTagowy(zada);
+                    // Wywołanie metody Dekoratora, który dodaje informacje o tagach danego Zadania do WypiszInformacje()
+                    Console.WriteLine(deko.WypiszInformacje());
+
 
                     break;
 
