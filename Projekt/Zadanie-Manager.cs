@@ -70,6 +70,13 @@ public partial class Program
             //ZmienStan();
         }
 
+
+        // Zwrócenie nazwy obecnego stanu Zadania w formie string
+        public string ZwrocStan()
+        {
+            return stan.GetType().Name;
+        }
+
         // Zmiana obecnego stanu zadania
         public void ZmienStan(IStanZadania stan)
         {
@@ -109,7 +116,7 @@ public partial class Program
         // Wypisuje podstawowe informacje o zadaniu
         public override string WypiszInformacje()
         {
-            return $"[ZADANIE] ID: {id} | Tytu³: {tytul} | Treœæ: {tresc} | Priorytet: {priorytet} | Termin: {termin:d} | Stan: {stan.GetType().Name}";
+            return $"[ZADANIE] ID: {id} | Tytu³: {tytul} | Treœæ: {tresc} | Priorytet: {priorytet} | Termin: {termin:d}";
         }
 
         // Nadpisanie ToString() dla wygodnego wypisywania notatki

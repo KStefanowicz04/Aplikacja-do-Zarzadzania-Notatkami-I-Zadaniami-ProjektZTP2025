@@ -40,7 +40,7 @@ public partial class Program
         // Wywołuje metodę WypiszInformacje() podanego Wpisu oraz wypisuje Tagi danego Wpisu.
         public override string WypiszInformacje()
         {
-            string returnString = this.wpis.WypiszInformacje();  // Wyowłanie metody w podanym wpisie
+            string returnString = this.wpis.WypiszInformacje();  // Wywołanie metody w podanym Wpisie
 
             // Tagi danego Wpisu zostaną zapisane w tym stringu
             string tagiStr;
@@ -51,6 +51,39 @@ public partial class Program
                 tagiStr = "Brak tagów";
 
             returnString += $" | Tagi: {tagiStr}";
+            return returnString;  // Dodanie funkcjonalności przez Dekorator
+        }
+    }
+
+
+
+    // Dekorator abstrakcyjny, utworzony żeby jego poddrekorator(y) działał tylko dla Wpisów klasy Zadanie, ale nie dla Notatek
+    public abstract class DekoratorZadan : DekoratorWpisow
+    {
+        // Wskaźnik na Zadanie, które dekoruje dany Dekorator (nie Wpis, żeby działał tylko na Zadaniach)
+        protected Zadanie zadanie;
+
+
+        // Konstruktor
+        public DekoratorZadan(Zadanie zadanie) : base(zadanie)
+        {
+            this.zadanie = zadanie;
+        }
+    }
+
+    // 
+    public class DekoratorStanowy : DekoratorZadan
+    {
+        // Konstruktor - pusty, wszystkim zajmuje się klasa bazowa DekoratorZadan
+        public DekoratorStanowy(Zadanie zadanie) : base(zadanie) { }
+
+
+        // Wywołuje metodę WypiszInformacje() podanego Zadania oraz wypisuje obecny stan danego Zadania.
+        public override string WypiszInformacje()
+        {
+            string returnString = this.zadanie.WypiszInformacje();  // Wywołanie metody w podanym Zadaniu
+
+            returnString += $" | Stan: {this.zadanie.ZwrocStan()}";  // Dodanie obecnego stanu do zwracanych informacji
             return returnString;  // Dodanie funkcjonalności przez Dekorator
         }
     }

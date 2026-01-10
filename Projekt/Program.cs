@@ -36,6 +36,7 @@ public partial class Program
             Console.WriteLine("4: Dodaj nowy tag\n5. Usuń tag\n6. Dodaj nową notatkę\n7. Usuń notatkę");
             Console.WriteLine("8. Dodaj nowe zadanie przez Fabrykę\n9. Usuń zadanie");
             Console.WriteLine("10. Wypisz notatki wraz z ich tagami\n11. Wypisz zadania wraz z ich tagami");
+            Console.WriteLine("12. Wypisz wybrane Zadanie wraz z jego obecnym stanem");
             string command = Console.ReadLine();  // Odczytuje komendę z klawiatury.
 
             switch (command)
@@ -187,14 +188,14 @@ public partial class Program
                     Notatka not = menedzerNotatek.WyszukajNotatke(Int32.Parse(command));
 
                     // DekoratorTagowy danej Notatki
-                    DekoratorTagowy deko = new DekoratorTagowy(not);
+                    DekoratorWpisow deko = new DekoratorTagowy(not);
                     // Wywołanie metody Dekoratora, który dodaje informacje o tagach danej Notatki do WypiszInformacje()
                     Console.WriteLine( deko.WypiszInformacje() );  
 
 
                     break;
 
-                // Wypisanie Zadań z ich tagami
+                // Wypisz wybrane Zadanie z jego tagami
                 case "11":
                     Console.WriteLine("Podaj ID Zadania do wypisania:");
                     command = Console.ReadLine();
@@ -203,6 +204,20 @@ public partial class Program
                     // DekoratorTagowy danego Zadania
                     deko = new DekoratorTagowy(zada);
                     // Wywołanie metody Dekoratora, który dodaje informacje o tagach danego Zadania do WypiszInformacje()
+                    Console.WriteLine(deko.WypiszInformacje());
+
+
+                    break;
+
+                // Wypisz wybrane Zadanie z jego stanem
+                case "12":
+                    Console.WriteLine("Podaj ID Zadania do wypisania:");
+                    command = Console.ReadLine();
+                    zada = menedzerZadan.WyszukajZadanie(Int32.Parse(command));
+
+                    // DekoratorStanowy danego Zadania
+                    deko = new DekoratorStanowy(zada);
+                    // Wywołanie metody Dekoratora, który dodaje informacje o stanie danego Zadania do WypiszInformacje()
                     Console.WriteLine(deko.WypiszInformacje());
 
 
