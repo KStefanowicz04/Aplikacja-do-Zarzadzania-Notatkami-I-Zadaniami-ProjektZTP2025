@@ -54,6 +54,11 @@ public partial class Program
 
 
         // Metody
+
+        public Priorytet Priorytet
+        {
+            get { return priorytet; }
+        }
         // Zwraca termin wykonania zadania.
         // pole "termin" jest prywatne i nie mo¿e byæ bezpoœrednio odczytywane poza klas¹ Zadanie (np. przez Mened¿eraZadañ).
         public DateTime ZwrocTermin()
@@ -342,6 +347,23 @@ public partial class Program
 
             return wynik;
         }
+        public void SortujZadaniaPoTerminach(List<Zadanie> lista)
+        {
+            lista.Sort(delegate (Zadanie a, Zadanie b)
+            {
+                return a.ZwrocTermin().CompareTo(b.ZwrocTermin());
+            });
+        }
+
+        // Sortowanie listy zadañ po priorytecie malej¹co (wysoki priorytet pierwszy)
+        public void SortujZadaniaPoPriorytecie(List<Zadanie> lista)
+        {
+            lista.Sort(delegate (Zadanie a, Zadanie b)
+            {
+                return b.Priorytet.CompareTo(a.Priorytet);
+            });
+        }
+
 
 
         // Oznacza Zadania z podanej Listy Zadañ jako wykonane
