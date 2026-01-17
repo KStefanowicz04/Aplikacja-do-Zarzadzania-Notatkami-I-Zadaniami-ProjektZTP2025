@@ -121,7 +121,20 @@ public partial class Program
         // Wypisuje podstawowe informacje o zadaniu
         public override string WypiszInformacje()
         {
-            return $"[ZADANIE] ID: {id} | Tytu³: {tytul} | Treœæ: {tresc} | Priorytet: {priorytet} | Termin: {termin:d}";
+            string infoTagi = "Brak tagów";
+
+            if (tagi != null && tagi.Count > 0)
+            {
+                List<string> nazwy = new List<string>();
+                foreach (Tag t in tagi)
+                {
+                    nazwy.Add(t.nazwa);
+                }
+                infoTagi = string.Join(", ", nazwy);
+            }
+
+            // Zwracamy pe³ne informacje o zadaniu
+            return $"[ZADANIE] ID: {id} | Tytu³: {tytul} | Treœæ: {tresc} | Utworzone: {dataUtworzenia} | Ostatnia modyfikacja: {dataModyfikacji} | Priorytet: {priorytet} | Termin: {termin:d} | Stan: {stan.GetType().Name} | Tagi: {infoTagi}";
         }
 
         // Nadpisanie ToString() dla wygodnego wypisywania notatki
