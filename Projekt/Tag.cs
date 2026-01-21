@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Formats.Asn1;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using static Program;
 
 public partial class Program
 {
@@ -16,13 +17,53 @@ public partial class Program
         public List<Notatka> notatki { get; }
 
         // Lista Zadań do których przypisany jest dany tag
-        //public List<Zadanie> zadania { get; }  // UWAGA: ZADANIA JESZCZE NIE ISTENIEJĄ
+        public List<Zadanie> zadania { get; }
 
 
         // Konstruktor
         public Tag(string nazwa)
         {
             this.nazwa = nazwa;
+        }
+
+
+        // Dodaje podaną Notatkę do listy Notatek w danym Tagu, jeśli dana Notatka jeszcze tam nie występuje
+        // Zwraca true jeśli dodanie było sukcesem.
+        public bool DodajNotatke(Notatka notatka)
+        {
+            if (notatki.Contains(notatka) == false)
+            {
+                notatki.Add(notatka);
+                return true;
+            }
+            return false;
+        }
+
+        // Usuwa podaną Notatkę z listy Notatek w danym Tagu.
+        // Zwraca true jeśli usunięcie było sukcesem.
+        public bool UsunNotatke(Notatka notatka)
+        {
+            return notatki.Remove(notatka);
+        }
+
+
+        // Dodaje podane Zadanie do listy Zadań w danym Tagu, jeśli dane Zadanie jeszcze tam nie występuje
+        // Zwraca true jeśli dodanie było sukcesem.
+        public bool DodajZadanie(Zadanie zadanie)
+        {
+            if (zadania.Contains(zadanie) == false)
+            {
+                zadania.Add(zadanie);
+                return true;
+            }
+            return false;
+        }
+
+        // Usuwa podaną Notatkę z listy Notatek w danym Tagu.
+        // Zwraca true jeśli usunięcie było sukcesem.
+        public bool UsunZadanie(Zadanie zadanie)
+        {
+            return zadania.Remove(zadanie);
         }
 
 
@@ -101,6 +142,32 @@ public partial class Program
                 Console.WriteLine("Nie znaleziono tagu do usunięcia.");
             }
         }
+
+
+        // Dodaje podaną Notatkę do danego Tagu. Zwraca true jeśli dodanie zakończyło się sukcesem.
+        public bool DodajNotatkeDoTagu(Tag tag, Notatka notatka)
+        {
+            return tag.DodajNotatke(notatka);
+        }
+
+        // Usuwa podaną Notatkę z danego Tagu. Zwraca true jeśli usunięcie zakończyło się sukcesem.
+        public bool UsunNotatkeZTagu(Tag tag, Notatka notatka)
+        {
+            return tag.UsunNotatke(notatka);
+        }
+
+        // Dodaje podane Zadanie do danego Tagu. Zwraca true jeśli dodanie zakończyło się sukcesem.
+        public bool DodajZadanieDoTagu(Tag tag, Zadanie zadanie)
+        {
+            return tag.DodajZadanie(zadanie);
+        }
+
+        // Usuwa podane Zadanie z danego Tagu. Zwraca true jeśli usunięcie zakończyło się sukcesem.
+        public bool UsunZadanieZTagu(Tag tag, Zadanie zadanie)
+        {
+            return tag.UsunZadanie(zadanie);
+        }
+
 
         // Wypisuje wszystkie tagi w liście tagów po przecinku
         public void Wypisztagi()
