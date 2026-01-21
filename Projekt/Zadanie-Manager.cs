@@ -126,20 +126,7 @@ public partial class Program
         // Wypisuje podstawowe informacje o zadaniu
         public override string WypiszInformacje()
         {
-            string infoTagi = "Brak tagów";
-
-            if (tagi != null && tagi.Count > 0)
-            {
-                List<string> nazwy = new List<string>();
-                foreach (Tag t in tagi)
-                {
-                    nazwy.Add(t.nazwa);
-                }
-                infoTagi = string.Join(", ", nazwy);
-            }
-
-            // Zwracamy pe³ne informacje o zadaniu
-            return $"[ZADANIE] ID: {id} | Tytu³: {tytul} | Treœæ: {tresc} | Utworzone: {dataUtworzenia} | Ostatnia modyfikacja: {dataModyfikacji} | Priorytet: {priorytet} | Termin: {termin:d} | Stan: {stan.GetType().Name} | Tagi: {infoTagi}";
+            return $"[ZADANIE] ID: {id} | Tytu³: {tytul} | Treœæ: {tresc} | Priorytet: {priorytet} | Termin: {termin:d}";
         }
 
         // Nadpisanie ToString() dla wygodnego wypisywania notatki
@@ -289,6 +276,20 @@ public partial class Program
                 Console.WriteLine("Nie znaleziono zadania do usuniêcia.");
             }
         }
+
+
+        // Dodaje podany Tag do danego Zadania. Zwraca true jeœli dodanie zakoñczy³o siê sukcesem.
+        public bool DodajTagDoZadania(Zadanie zadanie, Tag tag)
+        {
+            return zadanie.DodajTag(tag);
+        }
+
+        // Usuwa podany Tag z danego Zadania. Zwraca true jeœli usuniêcie zakoñczy³o siê sukcesem.
+        public bool UsunTagZZadania(Zadanie zadanie, Tag tag)
+        {
+            return zadanie.UsunTag(tag);
+        }
+
 
         // Wypisanie zawartoœci danego zadania
         public void WypiszZadanie(Zadanie zadanie)

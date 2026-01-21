@@ -39,7 +39,7 @@ public partial class Program
             this.tresc = tresc;
         }
 
-        // Ta sama metoda co powyżej, ale z dodatkowymi parametrami dostępnymi tylko dla klasy Zadanie
+        // Ta sama metoda co powyżej, ale z dodatkowymi parametrami dostępnymi TYLKO dla klasy Zadanie
         public virtual void Edytuj(string tytul, string tresc, Priorytet priorytet, DateTime termin)
         {
             // Wywołanie zwykłej metody Edytuj.
@@ -50,16 +50,23 @@ public partial class Program
         }
 
 
-        // Dodaje podany jako parametr 'tag' do Listy tagów 'tagi'
-        protected void DodajTag(Tag tag)
+        // Dodaje podany jako parametr 'tag' do Listy tagów 'tagi', jeśli dany Tag jeszcze tam nie występuje.
+        // Zwraca true jeśli dodanie było sukcesem.
+        public bool DodajTag(Tag tag)
         {
-            tagi.Add(tag);
+            if (tagi.Contains(tag) == false)
+            {
+                tagi.Add(tag);
+                return true;
+            }
+            return false;
         }
 
         // Usuwa podany jako parametr 'tag' z Listy tagów 'tagi'
-        protected void UsunTag(Tag tag)
+        // Zwraca true jeśli usunięcie było sukcesem.
+        public bool UsunTag(Tag tag)
         {
-            tagi.Remove(tag);
+            return tagi.Remove(tag);
         }
 
         // Abstrakcyjna metoda pochodząca od interfejsu IWpis;

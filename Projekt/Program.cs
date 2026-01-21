@@ -33,10 +33,13 @@ public partial class Program
         while (true)
         {
             Console.WriteLine("\n\nWybierz komendę (wpisz liczbę):\n1: Wypisz notatki\n2: Wypisz zadania\n3: Wypisz tagi");
-            Console.WriteLine("4: Dodaj nowy tag\n5. Usuń tag\n6. Dodaj nową notatkę\n7. Usuń notatkę");
-            Console.WriteLine("8. Dodaj nowe zadanie przez Fabrykę\n9. Usuń zadanie");
-            Console.WriteLine("10. Wypisz notatki wraz z ich tagami\n11. Wypisz zadania wraz z ich tagami");
-            Console.WriteLine("12. Wypisz wybrane Zadanie wraz z jego obecnym stanem");
+            Console.WriteLine("4: Dodaj nowy tag\n5. Usuń tag\n6. Dodaj Tag do Notatki\n7. Dodaj Tag do Zadania");
+            Console.WriteLine("8. Usuń Tag z Notatki\n9. Usuń Tag z Zadania");
+            Console.WriteLine("10. Dodaj nową notatkę\n11. Usuń notatkę");
+            Console.WriteLine("12. Dodaj nowe zadanie przez Fabrykę\n13. Usuń zadanie");
+            Console.WriteLine("14. Wypisz notatki wraz z ich tagami\n15. Wypisz zadania wraz z ich tagami");
+            Console.WriteLine("16. Wypisz wybrane Zadanie wraz z jego obecnym stanem");
+            Console.WriteLine("17. Wyszukaj ");
             string command = Console.ReadLine();  // Odczytuje komendę z klawiatury.
 
             switch (command)
@@ -78,8 +81,78 @@ public partial class Program
 
                     break;
 
-                // Dodanie nowej notatki
+                // Dodaj Tag do Notatki
                 case "6":
+                    Console.WriteLine("Podaj nazwę Tagu do dodania (wpisanie nieistniejącego Tagu utworzy nowy Tag):");
+                    command = Console.ReadLine();
+
+                    // Zmienna pomocnicza przechowująca wskaźnik na dany Tag
+                    Tag tag = menedzerTagow.ZwrocTag(command);
+                    // Utworzenie nowego Tagu jeśli nie istnieje taki o podanej nazwie
+                    if (tag == null)
+                    {
+                        tag = menedzerTagow.UtworzTag(command);
+                    }
+
+                    Console.WriteLine("Podaj id Notatki, do której zostanie dodany ten Tag:");
+                    command = Console.ReadLine();
+
+                    // Podane ID musi być liczbą
+                    if (int.TryParse(command, out _) == false)
+                    {
+                        Console.WriteLine("Podano niewłaściwe ID");
+                        break;
+                    }
+
+                    // Próba znalezienia Notatki
+                    Notatka notatka = menedzerNotatek.WyszukajNotatke(int.Parse(command));
+                    // Właściwe dodanie podanego Tagu do Notatki
+                    bool wynik = menedzerNotatek.DodajTagDoNotatki(notatka, tag);
+
+                    Console.WriteLine($"Dodanie tagu \"{tag.nazwa}\" do Notatki o ID={notatka.id} zakończyło się: {wynik}");
+
+                    break;
+
+                // Dodaj Tag do Zadania
+                case "7":
+                    Console.WriteLine("Podaj nazwę Tagu do dodania (wpisanie nieistniejącego Tagu utworzy nowy Tag):");
+                    command = Console.ReadLine();
+
+                    // Zmienna pomocnicza przechowująca wskaźnik na dany Tag
+                    tag = menedzerTagow.ZwrocTag(command);
+                    // Utworzenie nowego Tagu jeśli nie istnieje taki o podanej nazwie
+                    if (tag == null)
+                    {
+                        tag = menedzerTagow.UtworzTag(command);
+                    }
+
+                    Console.WriteLine("Podaj id Zadania, do którego zostanie dodany ten Tag:");
+                    command = Console.ReadLine();
+
+                    // Podane ID musi być liczbą
+                    if (int.TryParse(command, out _) == false)
+                    {
+                        Console.WriteLine("Podano niewłaściwe ID");
+                        break;
+                    }
+
+                    // Próba znalezienia Notatki
+                    Zadanie zadanie = menedzerZadan.WyszukajZadanie(int.Parse(command));
+                    // Właściwe dodanie podanego Tagu do Notatki
+                    wynik = menedzerZadan.DodajTagDoZadania(zadanie, tag);
+
+                    Console.WriteLine($"Dodanie tagu \"{tag.nazwa}\" do Zadania o ID={zadanie.id} zakończyło się: {wynik}");
+
+                    break;
+
+
+
+
+
+
+
+                // Dodanie nowej notatki
+                case "10":
                     Console.WriteLine("Podaj tytuł nowej Notatki:");
                     string tytul = Console.ReadLine();
                     Console.WriteLine("Podaj treść nowej Notatki:");
@@ -109,7 +182,7 @@ public partial class Program
                     break;
 
                 // Usunięcie danej Notatki
-                case "7":
+                case "11":
                     Console.WriteLine("Podaj ID Notatki do usunięcia:");
                     command = Console.ReadLine();
 
@@ -120,7 +193,7 @@ public partial class Program
                     break;
 
                 // Dodanie nowego zadania przez Fabrykę
-                case "8":
+                case "12":
                     Console.WriteLine("Podaj tytuł nowego Zadania:");
                     tytul = Console.ReadLine();
                     Console.WriteLine("Podaj treść nowego Zadania:");
@@ -171,7 +244,7 @@ public partial class Program
                     break;
 
                 // Usunięcie danego Zadania
-                case "9":
+                case "13":
                     Console.WriteLine("Podaj ID Zadania do usunięcia:");
                     command = Console.ReadLine();
 
@@ -182,7 +255,7 @@ public partial class Program
                     break;
 
                 // Wypisz wybraną Notatkę z jej tagami
-                case "10":
+                case "14":
                     Console.WriteLine("Podaj ID Notatki do wypisania:");
                     command = Console.ReadLine();
                     Notatka not = menedzerNotatek.WyszukajNotatke(Int32.Parse(command));
@@ -196,7 +269,7 @@ public partial class Program
                     break;
 
                 // Wypisz wybrane Zadanie z jego tagami
-                case "11":
+                case "15":
                     Console.WriteLine("Podaj ID Zadania do wypisania:");
                     command = Console.ReadLine();
                     Zadanie zada = menedzerZadan.WyszukajZadanie(Int32.Parse(command));
@@ -210,7 +283,7 @@ public partial class Program
                     break;
 
                 // Wypisz wybrane Zadanie z jego stanem
-                case "12":
+                case "16":
                     Console.WriteLine("Podaj ID Zadania do wypisania:");
                     command = Console.ReadLine();
                     zada = menedzerZadan.WyszukajZadanie(Int32.Parse(command));
