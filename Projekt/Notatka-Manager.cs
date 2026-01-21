@@ -76,10 +76,14 @@ public partial class Program
             // W³aœciwe utworzenie Notatki
             Notatka notatka = new Notatka(tytul, tresc, tagi);
             // Dodanie Notatki do listy Notatek wszystkich wybranych Tagów
-            foreach(Tag tag in tagi)
+            if (tagi != null)
             {
-                tag.DodajNotatke(notatka);
+                foreach (Tag tag in tagi)
+                {
+                    tag.DodajWpis(notatka);
+                }
             }
+
 
             return notatka;
         }
@@ -148,7 +152,7 @@ public partial class Program
                 // Usuniêcie danej Notatki z Listy Notatek Tagów przypisanych do danej Notatki
                 foreach(Tag tag in notatka.tagi)
                 {
-                    tag.UsunNotatke(notatka);
+                    tag.UsunWpis(notatka);
                 }
 
                 Console.WriteLine("Usuniêto notatkê:");

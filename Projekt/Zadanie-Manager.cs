@@ -275,7 +275,7 @@ public partial class Program
                 // Usuniêcie danej Notatki z Listy Notatek Tagów przypisanych do danej Notatki
                 foreach (Tag tag in zadanie.tagi)
                 {
-                    tag.UsunZadanie(zadanie);
+                    tag.UsunWpis(zadanie);
                 }
 
                 Console.WriteLine("Usuniêto zadanie:");
@@ -450,10 +450,14 @@ public partial class Program
             // W³aœciwe utworzenie Zadania na podstawie powy¿szych danych
             Zadanie zadanie = new Zadanie(tytul, tresc, domyslnyStan, priorytet, termin, tagi);
             // Dodanie Zadania do listy Zadañ wszystkich wybranych Tagów
-            foreach (Tag tag in tagi)
+            if (tagi != null)
             {
-                tag.DodajZadanie(zadanie);
+                foreach (Tag tag in tagi)
+                {
+                    tag.DodajWpis(zadanie);
+                }
             }
+
 
             // Utworzenie i zwrócenie nowego Zadania 
             return zadanie;

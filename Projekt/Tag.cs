@@ -13,58 +13,37 @@ public partial class Program
         // Nazwa danego tagu
         public string nazwa { get; }
 
-        // Lista Notatek do których przypisany jest dany tag
-        public List<Notatka> notatki { get; }
-
-        // Lista Zadań do których przypisany jest dany tag
-        public List<Zadanie> zadania { get; }
+        // Lista Wpisów do których przypisany jest dany tag
+        public List<Wpis> wpisy{ get; }
 
 
         // Konstruktor
         public Tag(string nazwa)
         {
             this.nazwa = nazwa;
+            wpisy = new List<Wpis>();
         }
 
 
-        // Dodaje podaną Notatkę do listy Notatek w danym Tagu, jeśli dana Notatka jeszcze tam nie występuje
+        // Dodaje podany Wpis do listy Wpisów w danym Tagu, jeśli dany Wpis jeszcze tam nie występuje
         // Zwraca true jeśli dodanie było sukcesem.
-        public bool DodajNotatke(Notatka notatka)
+        public bool DodajWpis(Wpis wpis)
         {
-            if (notatki.Contains(notatka) == false)
+            if (wpisy.Contains(wpis) == false)
             {
-                notatki.Add(notatka);
+                wpisy.Add(wpis);
                 return true;
             }
             return false;
         }
 
-        // Usuwa podaną Notatkę z listy Notatek w danym Tagu.
+        // Usuwa podany Wpis z listy Wpisów w danym Tagu.
         // Zwraca true jeśli usunięcie było sukcesem.
-        public bool UsunNotatke(Notatka notatka)
+        public bool UsunWpis(Wpis wpis)
         {
-            return notatki.Remove(notatka);
+            return wpisy.Remove(wpis);
         }
 
-
-        // Dodaje podane Zadanie do listy Zadań w danym Tagu, jeśli dane Zadanie jeszcze tam nie występuje
-        // Zwraca true jeśli dodanie było sukcesem.
-        public bool DodajZadanie(Zadanie zadanie)
-        {
-            if (zadania.Contains(zadanie) == false)
-            {
-                zadania.Add(zadanie);
-                return true;
-            }
-            return false;
-        }
-
-        // Usuwa podaną Notatkę z listy Notatek w danym Tagu.
-        // Zwraca true jeśli usunięcie było sukcesem.
-        public bool UsunZadanie(Zadanie zadanie)
-        {
-            return zadania.Remove(zadanie);
-        }
 
 
         // Nadpisanie ToString(); wypisuje nazwę tagu
@@ -144,28 +123,16 @@ public partial class Program
         }
 
 
-        // Dodaje podaną Notatkę do danego Tagu. Zwraca true jeśli dodanie zakończyło się sukcesem.
-        public bool DodajNotatkeDoTagu(Tag tag, Notatka notatka)
+        // Dodaje podany Wpis do danego Tagu. Zwraca true jeśli dodanie zakończyło się sukcesem.
+        public bool DodajWpisDoTagu(Tag tag, Wpis wpis)
         {
-            return tag.DodajNotatke(notatka);
+            return tag.DodajWpis(wpis);
         }
 
-        // Usuwa podaną Notatkę z danego Tagu. Zwraca true jeśli usunięcie zakończyło się sukcesem.
-        public bool UsunNotatkeZTagu(Tag tag, Notatka notatka)
+        // Usuwa podany Wpis z danego Tagu. Zwraca true jeśli usunięcie zakończyło się sukcesem.
+        public bool UsunWpisZTagu(Tag tag, Wpis wpis)
         {
-            return tag.UsunNotatke(notatka);
-        }
-
-        // Dodaje podane Zadanie do danego Tagu. Zwraca true jeśli dodanie zakończyło się sukcesem.
-        public bool DodajZadanieDoTagu(Tag tag, Zadanie zadanie)
-        {
-            return tag.DodajZadanie(zadanie);
-        }
-
-        // Usuwa podane Zadanie z danego Tagu. Zwraca true jeśli usunięcie zakończyło się sukcesem.
-        public bool UsunZadanieZTagu(Tag tag, Zadanie zadanie)
-        {
-            return tag.UsunZadanie(zadanie);
+            return tag.UsunWpis(wpis);
         }
 
 
