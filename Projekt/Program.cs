@@ -41,7 +41,8 @@ public partial class Program
             Console.WriteLine("12. Dodaj nowe zadanie przez Fabrykę\n13. Usuń zadanie");
             Console.WriteLine("14. Wypisz Notatki wraz z ich tagami\n15. Wypisz Zadania wraz z ich tagami");
             Console.WriteLine("16. Wypisz Zadania wraz z ich obecnym stanem");
-            Console.WriteLine("17. Wyszukaj ");
+            Console.WriteLine("17. Zmień stan wybranego Zadania");
+            Console.WriteLine("18. Wyszukaj ");
             string command = Console.ReadLine();  // Odczytuje komendę z klawiatury.
 
             switch (command)
@@ -96,7 +97,7 @@ public partial class Program
                         tag = menedzerTagow.UtworzTag(command);
                     }
 
-                    Console.WriteLine("Podaj id Notatki, do której zostanie dodany ten Tag:");
+                    Console.WriteLine("Podaj ID Notatki, do której zostanie dodany ten Tag:");
                     command = Console.ReadLine();
 
                     // Podane ID musi być liczbą
@@ -134,7 +135,7 @@ public partial class Program
                         tag = menedzerTagow.UtworzTag(command);
                     }
 
-                    Console.WriteLine("Podaj id Zadania, do którego zostanie dodany ten Tag:");
+                    Console.WriteLine("Podaj ID Zadania, do którego zostanie dodany ten Tag:");
                     command = Console.ReadLine();
 
                     // Podane ID musi być liczbą
@@ -173,7 +174,7 @@ public partial class Program
                         break;
                     }
 
-                    Console.WriteLine("Podaj id Notatki, z której zostanie usunięty ten Tag:");
+                    Console.WriteLine("Podaj ID Notatki, z której zostanie usunięty ten Tag:");
                     command = Console.ReadLine();
 
                     // Podane ID musi być liczbą
@@ -212,7 +213,7 @@ public partial class Program
                         break;
                     }
 
-                    Console.WriteLine("Podaj id Zadania, z którego zostanie usunięty ten Tag:");
+                    Console.WriteLine("Podaj ID Zadania, z którego zostanie usunięty ten Tag:");
                     command = Console.ReadLine();
 
                     // Podane ID musi być liczbą
@@ -226,7 +227,7 @@ public partial class Program
                     zadanie = menedzerZadan.WyszukajZadanie(int.Parse(command));
                     if (zadanie == null)
                     {
-                        Console.WriteLine("Notatka o danym ID nie istnieje");
+                        Console.WriteLine("Zadanie o danym ID nie istnieje");
                         break;
                     }
 
@@ -358,9 +359,9 @@ public partial class Program
                     // Pętla przez wszystkie Zadania w MenedzerZadan
                     foreach (Zadanie zada in menedzerZadan.Zadania)
                     {
-                        // DekoratorTagowy danej Notatki
+                        // DekoratorTagowy danego Zadania
                         DekoratorWpisow deko = new DekoratorTagowy(zada);
-                        // Wywołanie metody Dekoratora, który dodaje informacje o tagach danej Notatki do WypiszInformacje()
+                        // Wywołanie metody Dekoratora, który dodaje informacje o tagach danego Zadania do WypiszInformacje()
                         Console.WriteLine(deko.WypiszInformacje());
                     }
 
@@ -371,12 +372,60 @@ public partial class Program
                     // Pętla przez wszystkie Zadania w MenedzerZadan
                     foreach (Zadanie zada in menedzerZadan.Zadania)
                     {
-                        // DekoratorStanowy danej Notatki
+                        // DekoratorStanowy dla danego Zadania
                         DekoratorStanowy deko = new DekoratorStanowy(zada);
-                        // Wywołanie metody Dekoratora, który dodaje informacje o tagach danej Notatki do WypiszInformacje()
+                        // Wywołanie metody Dekoratora, który dodaje informacje o stanie danego Zadania do WypiszInformacje()
                         Console.WriteLine(deko.WypiszInformacje());
                     }
 
+                    break;
+
+                // Zmień stan wybranego Zadania
+                case "17":
+                    Console.WriteLine("Podaj ID Zadania, którego stan zostanie zmieniony:");
+                    command = Console.ReadLine();
+
+                    // Podane ID musi być liczbą
+                    if (int.TryParse(command, out _) == false)
+                    {
+                        Console.WriteLine("Podano niewłaściwe ID");
+                        break;
+                    }
+
+                    // Próba znalezienia Zadania
+                    zadanie = menedzerZadan.WyszukajZadanie(int.Parse(command));
+                    if (zadanie == null)
+                    {
+                        Console.WriteLine("Zadanie o danym ID nie istnieje");
+                        break;
+                    }
+
+
+                    // Wypisanie informacji o danym Zadaniu, w tym o jego Stanie poprzez DekoratorStanowy
+                    Console.WriteLine("Obecny stan danego Zadania: ");
+                    DekoratorStanowy dekor = new DekoratorStanowy(zadanie);
+                    Console.WriteLine(dekor.WypiszInformacje());
+
+                    Console.WriteLine("\nWybierz nowy Stan danego Zadania:\n1. Wykonane\n2. Aktywne\n3. Zaległe");
+                    command = Console.ReadLine();
+
+                    // Wybranie odpowiedniej metody
+                    if (command == "1") zadanie.OznaczJakoWykonane();
+                    else if (command == "2") zadanie.OznaczJakoAktywne();
+                    else if (command == "3") zadanie.OznaczJakoZalegle();
+                    // Podano niepoprawną wartość
+                    else
+                    {
+                        Console.WriteLine("Podano niepoprawną wartość.");
+                        break;
+                    }
+
+
+                    break;
+
+                // Wyszukiwanie
+                case "18":
+                    Console.WriteLine("WYSZUKIWANIE NIE MA IMPLEMENTACJI W MENU GŁÓWNYM");
                     break;
 
                 // W przypadku podania nieodpowiedniej komendy, należy wpisać coś innego.
