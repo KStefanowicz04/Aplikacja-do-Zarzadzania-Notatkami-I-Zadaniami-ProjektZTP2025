@@ -1,4 +1,4 @@
-public class Zadanie
+public partial class Zadanie
 {
     public string Tytuł { get; set; }
     public string Treść { get; set; }
