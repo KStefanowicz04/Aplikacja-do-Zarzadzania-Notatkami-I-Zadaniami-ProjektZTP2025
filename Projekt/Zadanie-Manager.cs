@@ -71,12 +71,7 @@ public partial class Program
 
         // Metody
 
-        // Getter priorytetu
-        public Priorytet Priorytet
-        {
-            get { return priorytet; }
-        }
-        // Getter temrminu Zadania
+        // Getter terminu Zadania
         public DateTime ZwrocTermin()
         {
             return termin;
@@ -424,7 +419,7 @@ public partial class Program
         {
             lista.Sort(delegate (Zadanie a, Zadanie b)
             {
-                return b.Priorytet.CompareTo(a.Priorytet);
+                return b.PriorytetZadania.CompareTo(a.PriorytetZadania);
             });
         }
 

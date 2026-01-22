@@ -4,23 +4,24 @@
 
 ' ENUMY
 enum Priorytet {
-  NISKI
-  NORMALNY
-  WYSOKI
+  Niski
+  Sredni
+  Wysoki
 }
 
 
 
 ' KLASY
-' Abstrakcyjna Fabryka - dziedziczą z niej dwie fabryki Notatek i Zadań
+' Abstrakcyjna Fabryka Wpisów - dziedziczą z niej dwie fabryki Notatek i Zadań
 abstract class FabrykaWpisów <<Factory Method>> {
     # FabrykaWpisów()
-    + UtwórzWpis()
+    + UtwórzWpis(tytuł: string, treść: string, nazwyTagów: List<string>)
+    + UtwórzWpis(tytuł: string, treść: string, priorytet: Priorytet, termin: DateTime, nazwyTagów: List<string>, )
 }
 
 ' Interfejs Wpisu - potrzebny do dekoratorów
 interface IWpis {
-    WypiszInformacje(): String
+    WypiszInformacje(): string
 }
 
 ' Wpis - klasa abstrakcyjna z której dziedziczą Notatka i Zadanie.
@@ -28,17 +29,17 @@ interface IWpis {
 ' Można je edytować, Tagi można dodawać i usuwać.
 abstract class Wpis {
     - id: int
-    - tytuł: String
-    - treść: String
+    - tytuł: string
+    - treść: string
     - dataUtworzenia: DateTime
     - dataModyfikacji: DateTime
     - tagi: List<Tag>
 
-    # Wpis(tytuł: String, treść: String) : IWpis
-    + Edytuj(tytuł: String, treść: String): void
+    # Wpis(tytuł: string, treść: string) : IWpis
+    + Edytuj(tytuł: string, treść: string, priorytet: Priorytet, termin: DateTime): void
     + DodajTag(tag: Tag): void
     + UsuńTag(tag: Tag): void
-    + WypiszInformacje(): String
+    + WypiszInformacje(): string
 }
 
 
@@ -50,34 +51,38 @@ class MenedżerNotatek <<Singleton>> {
     - instancja: MenedżerNotatek
     - fabryka: FabrykaNotatek
     - notatki: List<Notatka>
+    - IDNotatek: HashSet<int>
 
     - MenedżerNotatek()
-    + UtwórzNotatkęPrzezFabrykę(tytuł: String, treść: String, tagi: List<Tag>): void
+    + UtwórzNotatkęPrzezFabrykę(tytuł: string, treść: string, tagi: List<string>): void
+    + WybierzIDNotatki(): int
     + UsuńNotatkę(notatka: Notatka): void
         'po podaniu notatki-obiektu, metoda wzywa ToString() danej notatki i wypisuje jej zawartość
-    + WypiszNotatkę(notatka: Notatka): void
+    + DodajTagDoNotatki(notatka: Notatka, tag: Tag)
+    + UsuńTagZNotatki(notatka: Notatka, tag: Tag)
         'wyszukiwanie po ID
-    + WyszukajNotatki(id: int): Notatka
-        'wyszukiwanie po treści - zawiera jednego z podanych Stringów
-    + WyszukajNotatki(zawiera: List<String>): List<Notatka>
+    + WyszukajNotatke(id: int): Notatka
+        'wyszukiwanie po treści - zawiera jednego z podanych stringów
+    + WyszukajNotatke(zawiera: List<string>): List<Notatka>
         'wyszukiwanie po Tagu
-    + WyszukajNotatki(tag: Tag): List<Notatka>
+    + WyszukajNotatke(danyTag: Tag): List<Notatka>
+    + WypiszNotatkę(notatka: Notatka): void
+    + WypiszNotatki(): void
     + GetterInstancji(): MenedżerNotatek
 }
 
 ' Fabryka Notatek - dziedziczy z abstrakcyjnej FabrykiWpisów
 class FabrykaNotatek <<Factory Method>> {
-    + FabrykaNotatek() : FabrykaWpisów
-    + UtwórzWpis(tytuł: String, treść: String, tagi: List<Tag>): Notatka <<override>>
+    + UtwórzWpis(tytuł: string, treść: string, nazwyTagów: List<string>): Notatka <<override>>
 }
 
 ' Dziedziczy z klasy Wpis
 class Notatka {
-    - ulubiona: bool
+    - Ulubiona: bool
 
-    + Notatka(tytuł: String, treść: String) : base(tytuł: String, treść: String)
+    + Notatka(tytuł: string, treść: string, tagi: List<Tag>) : base(tytuł: string, treść: string)
     + UstawUlubione(ustawienie: bool): void
-    + WypiszInformacje(): String <<override>>
+    + WypiszInformacje(): string <<override>>
 }
 
 ' Menedżer zadań - tworzy, usuwa, wyszukuje zadania.
@@ -87,69 +92,80 @@ class MenedżerZadań <<Singleton>> {
     - instancja: MenedżerZadań
     - fabryka: FabrykaZadań
     - zadania: List<Zadanie>
+    - IDZadań: HashSet
 
     - MenedżerZadań()
-    + UtwórzZadaniePrzezFabrykę(tytuł: String, treść: String, priorytet: Priorytet, termin: Date, tagi: List<Tag>): void
-    + UsuńZadanie(zadanie: Zadanie)
-    + WypiszZadanie(): void
-    + SzukajZadań(...)
-    + OznaczZadaniaJakoWykonane(zadania: List<Zadanie>): void
-    + WybierzZaległe(): List<Zadanie>
     + GetterInstancji(): MenedżerZadań
+    + UtwórzZadaniePrzezFabrykę(tytuł: string, treść: string, priorytet: Priorytet, termin: Date, tagi: List<string>): void
+    + WybierzIDZadania(): int
+    + DodajZadanie(zadanie: Zadanie): void
+    + UsuńZadanie(zadanie: Zadanie): void
+    + DodajTagDoZadania(zadanie: Zadanie, tag: Tag): bool
+    + UsuńTagZZadania(zadanie: Zadanie, tag: Tag): bool
+    + WypiszZadanie(zadanie: Zadanie): void
+    + WyszukajZadanie(id: int): Zadanie
+    + SzukajZadań(fraza: string): List<Zadanie>
+    + SzukajPoTerminach(od: DateTime, doDaty: DateTime): List<Zadania>
+    + SortujZadaniaPoPriorytecie(lista: List<Zadanie>): List<Zadania>
+    + OznaczZadaniaJakoWykonane(lista: List<Zadanie>): void
+    + WybierzZaległe(): List<Zadanie>
+    + WypiszZadania(): void
 }
 
 ' Fabryka Zadań - dziedziczy z abstrakcyjnej FabrykiWpisów
 class FabrykaZadań <<Factory Method>> {
     + FabrykaZadań() : FabrykaWpisów
-    + UtwórzWpis(tytuł: String, treść: String, priorytet: Priorytet, termin: Date, tagi: List<Tag>): Zadanie <<override>>
+    + UtwórzWpis(tytuł: string, treść: string, priorytet: Priorytet, termin: Date, nazwyTagów: List<string>): Zadanie <<override>>
 }
 
 ' Dziedziczy z klasy Wpis
 class Zadanie {
-        ' Obecny stan:
-    - stan: StanZadania
+    - stan: IStanZadania
     - priorytet: Priorytet
     - termin: DateTime
 
-    + Zadanie(stan: StanZadania, priorytet: Priorytet, termin: Date, stan: StanZadania) : base(tytuł: String, treść: String)
-    + Edytuj(tytuł: String, treść: String, priorytet: Priorytet, termin: Date): void <<override>>
+    + Zadanie(stan: StanZadania, priorytet: Priorytet, termin: Date, tagi: List<Tag>) : base(tytuł: string, treść: string)
+    + Zadanie(tytuł: string, treść: string)
+    + Edytuj(tytuł: string, treść: string, priorytet: Priorytet, termin: Date): void <<override>>
+    + ZwróćStan(): string
+    + ZmieńStan(stan: IStanZadania): void
     + OznaczJakoWykonane(): void
+    + OznaczJakoAktywne(): void
+    + OznaczJakoZaległe(): void
     + SprawdźCzyZalegle(): bool
-    + WypiszInformacje(): String <<override>>
-    + ZmieńStan(stan: StanZadania): void
-        ' Stany:
-    + StanWykonane(): void
-    + StanAktywne(): void
-    + StanZaległe(): void
+    + WypiszInformacje(): string <<override>>
 }
 
 ' Builder klasy Zadanie - interfejs
 interface IZadanieBuilder <<Builder>> {
-    + UstawTytuł(tytuł: String): ZadanieBuilder
-    + UstawTreść(treść: String): ZadanieBuilder
+    + UstawTytuł(tytuł: string): ZadanieBuilder
+    + UstawTreść(treść: string): ZadanieBuilder
     + UstawStan(stan: StanZadania): ZadanieBuilder
     + UstawPriorytet(priorytet: Priorytet): ZadanieBuilder
     + UstawTermin(termin: DateTime): ZadanieBuilder
-    + UstawTagi(tagi: List<Tag>): ZadanieBuilder
+    + UstawTagi(tagi: List<string>): ZadanieBuilder
 }
 
 ' Implementacja Buildera
 class ZadanieBuilder <<Builder>> {
-    - tytuł: String
-    - treść: String
-    - stan: StanZadania
-    - priorytet: Priorytet
-    - termin: DateTime
-    - tagi: List<Tag>
-
-    + ZadanieBuilder() : IZadanieBuilder
-    + UstawTytuł(tytuł: String): ZadanieBuilder
-    + UstawTreść(treść: String): ZadanieBuilder
-    + UstawStan(stan: StanZadania): ZadanieBuilder
+    - _zadanie: Zadanie
+    
+    + UstawTytuł(tytuł: string): ZadanieBuilder
+    + UstawTreść(treść: string): ZadanieBuilder
+    + UstawStan(stan: IStanZadania): ZadanieBuilder
     + UstawPriorytet(priorytet: Priorytet): ZadanieBuilder
     + UstawTermin(termin: DateTime): ZadanieBuilder
-    + UstawTagi(tagi: List<Tag>): ZadanieBuilder
+    + UstawTagi(tagi: List<string>): ZadanieBuilder
     + Build(): Zadanie
+}
+
+' Director Buildera
+class ZadanieDirector <<Director>> {
+    - _builder: ZadanieBuilder
+
+    + KonstruujZadaniePilne(tytuł: string, treść: string): void
+    + KonstruujZadanieDługoterminowe(tytuł: string, treść: string): void
+    + KonstruujZadanieKrótkoterminowe(tytuł: string, treść: string): void
 }
 
 
@@ -160,34 +176,39 @@ class MenedżerTagów <<Singleton>> {
     - tagi: List<Tag>
 
     - MenedżerTagów()
-    + UtwórzTag(): void
-    + UsuńTag(): void
+    + GetterInstancji(): MenedżerTagów
+    + UtwórzTag(nazwa: string): void
+    + ZwróćTag(nazwa: string): tag
+    + UsuńTag(nazwa: string): void
+    + DodajWpisDoTagu(tag: Tag, wpis: Wpis): bool
+    + UsuńWpisZTagu(tag: Tag, wpis: Wpis): bool
     + WypiszTagi(): void
 }
 
 ' Tagi mają listy Notatek i Zadań do których są przypisane.
 ' Jeden tag może zostać przypisany do wielu Notatek i Zadań
 class Tag {
-    - nazwa: String
-    - notatki: List<Notatka>
-    - zadania: List<Zadanie>
+    - nazwa: string
+    - wpisy: List<Wpis>
 
-    + Tag(nazwa: String)
+    + Tag(nazwa: string)
+    + DodajWpis(wpis: Wpis): bool
+    + UsuńWpis(wpis: Wpis): bool
 }
 
 ' DEKORATORY
-' Bazowy dekorator abstrakcyjny - pozostałe dekoratory z niego dziedziczą
+' Bazowy abstrakcyjny dekorator Wpisów - pozostałe dekoratory z niego dziedziczą
 abstract class DekoratorWpisów <<Dekorator>> {
     # wpis: IWpis
 
     # DekoratorWpisów(wpis: IWpis): IWpis
-    + WypiszInformacje(): String
+    + WypiszInformacje(): string
 }
 
 ' Konkretny dekorator wypisujący Tagi danego Wpisu (Notatki/Zadania)
 class DekoratorTagowy <<Dekorator>> {
     + DekoratorTagowy(wpis: IWpis) : base(wpis)
-    + WypiszInformacje(): String <<override>>
+    + WypiszInformacje(): string <<override>>
 }
 
 
@@ -203,13 +224,13 @@ class DekoratorStanowy <<Dekorator>> {
     - stan: StanZadania
 
     + DekoratorStanowy(zadanie: Zadanie, stan: StanZadania) : base(zadanie)
-    + WypiszInformacje(): String <<override>>
+    + WypiszInformacje(): string <<override>>
 }
 
 
 ' STANY
 ' Dostępne stany dla Zadanie
-interface StanZadania <<State>> {
+interface IStanZadania <<State>> {
     + wykonane(zadanie: Zadanie)
     + aktywne(zadanie: Zadanie)
     + zaległe(zadanie: Zadanie)
@@ -217,19 +238,19 @@ interface StanZadania <<State>> {
 
 ' Konkretne stany 
 class StanWykonane <<State>> {
-    + wykonane(): void
-    + aktywne(): void
-    + zaległe(): void
+    + wykonane(zadanie: Zadanie): void
+    + aktywne(zadanie: Zadanie): void
+    + zaległe(zadanie: Zadanie): void
 }
 class StanAktywne <<State>> {
-    + wykonane(): void
-    + aktywne(): void
-    + zaległe(): void
+    + wykonane(zadanie: Zadanie): void
+    + aktywne(zadanie: Zadanie): void
+    + zaległe(zadanie: Zadanie): void
 }
 class StanZaległe <<State>> {
-    + wykonane(): void
-    + aktywne(): void
-    + zaległe(): void
+    + wykonane(zadanie: Zadanie): void
+    + aktywne(zadanie: Zadanie): void
+    + zaległe(zadanie: Zadanie): void
 }
 
 
@@ -283,13 +304,13 @@ DekoratorZadań <|-- DekoratorStanowy : dziedziczy
 Zadanie <|.. StanAktywne
 Zadanie <|.. StanWykonane
 Zadanie <|.. StanZaległe
-Zadanie --> StanZadania : ma
+Zadanie --> IStanZadania : ma
 
 
 ' BUILDER
 IZadanieBuilder <|-- ZadanieBuilder
 ZadanieBuilder --> Zadanie : "buduje"
-MenedżerZadań ..> ZadanieBuilder : "może używać"
+ZadanieDirector --> ZadanieBuilder : "korzysta"
 
 
 @enduml

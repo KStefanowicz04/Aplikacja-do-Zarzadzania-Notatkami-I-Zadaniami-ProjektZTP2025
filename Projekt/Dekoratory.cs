@@ -25,7 +25,7 @@ public partial class Program
         // Metoda, którą dekoruje dany Dekorator. Zwraca pusty string, powinna zostać nadpisana przez Dekoratory pochodne.
         public virtual string WypiszInformacje()
         {
-            //return wpis.WypiszInformacje();
+            //return wpis.WypiszInformacje();  // - nie tutaj, w klasach Dekoratorów pochodnych
             return "";
         }
     }

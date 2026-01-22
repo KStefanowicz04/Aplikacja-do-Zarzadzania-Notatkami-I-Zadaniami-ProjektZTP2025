@@ -1,4 +1,4 @@
-﻿using System.Formats.Asn1;
+﻿    using System.Formats.Asn1;
 using System.Runtime.CompilerServices;
 
 public partial class Program
@@ -66,8 +66,8 @@ public partial class Program
         // Zwraca true jeśli usunięcie było sukcesem.
         public bool UsunTag(Tag tag)
         {
-            // Również usuwa dany Wpis z Listy Notatek/Zadań danego Tagu
-            // TUTAJ
+            // Również usuwa dany Wpis z Listy Wpisów danego Tagu
+            tag.UsunWpis(this);
 
             return tagi.Remove(tag);
         }
@@ -82,10 +82,6 @@ public partial class Program
     // Abstrakcyjna klasa fabryka wpisów; pochodzą z niej klasy FabrykaNotatek i FabrykaZadań
     public abstract class FabrykaWpisow
     {
-        // Fabryki korzystają z ManageraTagów do prostszego dodawania Tagów przy tworzeniu Wpisu
-        MenedzerTagow menedzerTagow = MenedzerTagow.GetterInstancji();
-
-
         // Konstruktor (tutaj: pusty)
         public FabrykaWpisow()
         {
