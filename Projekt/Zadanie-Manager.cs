@@ -29,7 +29,7 @@ public partial class Program
             get { return stan; }
             set { stan = value; }
         }
-        public Priorytet Priorytet
+        public Priorytet PriorytetZadania
         {
             get { return priorytet; }
             set { priorytet = value; }
@@ -62,7 +62,11 @@ public partial class Program
                 this.tagi = new List<Tag>();
         }
         // Pusty Konstruktor używany przez BuilderaZadań
-        public Zadanie() : base("", "") { }
+        public Zadanie() : base("", "")
+        {
+            // Manager zadań decyduje jaki numer ID zostanie przypisany do danego Zadania
+            id = MenedzerZadan.GetterInstancji().WybierzIDZadania();
+        }
 
 
         // Metody
@@ -255,8 +259,6 @@ public partial class Program
             get { return zadania; }
         }
         private HashSet<int> IDZadan = new();  // HashSet unikalnych ID Zadań. ID się nie powtarzają.
-
-        private ZadanieBuilder _builder;
         
         // Prywatny Konstruktor
         private MenedzerZadan()
@@ -302,6 +304,20 @@ public partial class Program
             // Dane ID nie jest używane, dodajemy je do HashSetu.
             IDZadan.Add(id);
             return id;
+        }
+
+        // Zadania utworzone przez Buildera muszą zostać dodane do Listy Zadań poprzez tę Metodę
+        public void DodajZadanie(Zadanie zadanie)
+        {
+            // Jeśli dane Zadanie już występuje w Liście (co nie powinno nigdy się wydarzyć), nie zostanie dodane.
+            if (zadania.Contains(zadanie))
+            {
+                Console.WriteLine("Dane Zadanie już występuje w Liście Zadań MenedżeraZadań");
+            }
+            else
+            {
+                zadania.Add(zadanie);
+            }
         }
 
         // Usuwa Zadanie z listy i wypisuje jego zawartość

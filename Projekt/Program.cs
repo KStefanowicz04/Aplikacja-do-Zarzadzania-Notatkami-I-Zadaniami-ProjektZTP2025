@@ -15,6 +15,10 @@ public partial class Program
         MenedzerZadan menedzerZadan = MenedzerZadan.GetterInstancji();
         MenedzerTagow menedzerTagow = MenedzerTagow.GetterInstancji();
 
+        // Builder i Director Zadań
+        ZadanieBuilder zadanieBuilder = new ZadanieBuilder();
+        ZadanieDirector zadanieDirector = new ZadanieDirector(zadanieBuilder);
+
         // Przykładowe tagi
         menedzerTagow.UtworzTag("Ain");
         menedzerTagow.UtworzTag("Betelgeuse");
@@ -30,6 +34,15 @@ public partial class Program
             Priorytet.Wysoki, new DateTime(2026, 2, 12));
         menedzerZadan.UtworzZadaniePrzezFabryke("Zadanie z niskim pr. z Tagami", "Ma podany jeden nieistniejący domyślnie Tag",
             Priorytet.Niski, new DateTime(2021, 12, 28), new List<string>{ "Betelgeuse", "Capella", "Sirius" });
+        // Przykładowe Zadanie utworzone przez Buildera i poprzez Directora
+        zadanieBuilder.UstawTytul("Zadanie z Buildera")
+            .UstawTresc("zawiera Tagi")
+            .UstawPriorytet(Priorytet.Wysoki)
+            .UstawTermin(DateTime.Now.AddDays(7))
+            .UstawTagi(new List<string> { "Capella", "Sirius" })
+            .Build();
+        zadanieDirector.KonstruujZadanieDlugoterminowe("Zadanie z Directora", "(długoterminowe)");
+
 
         // Menu główne
         while (true)

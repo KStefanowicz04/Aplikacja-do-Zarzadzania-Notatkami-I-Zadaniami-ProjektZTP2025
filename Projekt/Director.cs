@@ -1,39 +1,53 @@
 public partial class Program
 {
-   private ZadanieBuilder _builder;
+    // Director zajmujący się Builderem
+    public class ZadanieDirector
+    {
+        // Wskaźnik na Builder
+        private ZadanieBuilder _builder;
 
-   public Director(ZadanieBuilder builder)
-   {
-      _builder = builder;
-   }
-   
-   public void KonstruujZadaniePilne(string tytul, string tresc)
-   {
-      _builder
-         .UstawTytuł(tytul)
-         .UstawTreść(tresc)
-         .UstawPriorytet("Wysoki")
-         .UstawStan("Nowe")
-         .UstawTermin(DateTime.Now.AddDays(1));
-   }
-   
-   public void KonstruujZadanieDlugoterminowe(string tytul, string tresc)
-   {
-      _builder
-         .UstawTytuł(tytul)
-         .UstawTreść(tresc)
-         .UstawPriorytet("Niski")
-         .UstawStan("Planowane")
-         .UstawTermin(DateTime.Now.AddMonths(1));
-   }
-   
-   public void KonstruujZadanieKrotkoterminowe(string tytul, string tresc)
-   {
-      _builder
-         .UstawTytuł(tytul)
-         .UstawTreść(tresc)
-         .UstawPriorytet("Niski")
-         .UstawStan("Planowane")
-         .UstawTermin(DateTime.Now.AddDays(1));
-   }
+        // Konstruktor
+        public ZadanieDirector(ZadanieBuilder builder)
+        {
+            _builder = builder;
+        }
+
+
+        // Metody konstruujące przykładowe Zadania
+        // Zadanie o Priorytecie Wysokim do ukończenia za 1 dzień
+        public void KonstruujZadaniePilne(string tytul, string tresc)
+        {
+            _builder
+               .UstawTytul(tytul)
+               .UstawTresc(tresc)
+               .UstawPriorytet(Priorytet.Wysoki)
+               .UstawStan(new StanAktywne())
+               .UstawTermin(DateTime.Now.AddDays(1))
+               .Build();
+        }
+
+        // Zadanie o Niskim Priorytecie zaplanowane na za 1 miesiąc
+        public void KonstruujZadanieDlugoterminowe(string tytul, string tresc)
+        {
+            _builder
+               .UstawTytul(tytul)
+               .UstawTresc(tresc)
+               .UstawPriorytet(Priorytet.Niski)
+               .UstawStan(new StanAktywne())
+               .UstawTermin(DateTime.Now.AddMonths(1))
+               .Build();
+        }
+
+        // Zadanie o Niskim Priorytecie na za 1 dzień
+        public void KonstruujZadanieKrotkoterminowe(string tytul, string tresc)
+        {
+            _builder
+               .UstawTytul(tytul)
+               .UstawTresc(tresc)
+               .UstawPriorytet(Priorytet.Niski)
+               .UstawStan(new StanAktywne())
+               .UstawTermin(DateTime.Now.AddDays(1))
+               .Build();
+        }
+    }
 }
