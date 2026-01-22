@@ -18,18 +18,37 @@ public partial class Program
     // Klasa Zadanie, pochodna od Wpis
     public class Zadanie : Wpis
     {
-        private IStanZadania stan;  // Obecny stan zadania (wykonane/aktywne/zaleg³e)
+        // Pola
+        private IStanZadania stan;  // Obecny stan zadania (wykonane/aktywne/zalegÅ‚e)
         private Priorytet priorytet;  // Obecny priorytet zadania
         private DateTime termin;  // Termin wykonania zadania
+
+        // Gettery, settery
+        public IStanZadania Stan
+        {
+            get { return stan; }
+            set { stan = value; }
+        }
+        public Priorytet Priorytet
+        {
+            get { return priorytet; }
+            set { priorytet = value; }
+        }
+        public DateTime Termin
+        {
+            get { return termin; }
+            set { termin = value; }
+        }
+
 
 
         // Konstruktor
         public Zadanie(string tytul, string tresc, IStanZadania stan, Priorytet priorytet, DateTime termin, List<Tag> tagi) : base(tytul, tresc)
         {
-            // Manager zadañ decyduje jaki numer ID zostanie przypisany do danego Zadania
+            // Manager zadaÅ„ decyduje jaki numer ID zostanie przypisany do danego Zadania
             id = MenedzerZadan.GetterInstancji().WybierzIDZadania();
 
-            // Domyœlnie stan jest Aktywny - mo¿e nale¿y to usun¹æ z parametrów Konstruktora?
+            // DomyÅ›lnie stan jest Aktywny - moÅ¼e naleÅ¼y to usunÄ…Ä‡ z parametrÃ³w Konstruktora?
             if (stan != null) this.stan = stan;
             else this.stan = new StanAktywne();
 
@@ -42,6 +61,8 @@ public partial class Program
             else
                 this.tagi = new List<Tag>();
         }
+        // Pusty Konstruktor uÅ¼ywany przez BuilderaZadaÅ„
+        public Zadanie() : base("", "") { }
 
 
         // Metody
@@ -67,7 +88,7 @@ public partial class Program
         }
 
 
-        // Zwraca nazwê obecnego stanu Zadania w formie string
+        // Zwraca nazwÄ™ obecnego stanu Zadania w formie string
         public string ZwrocStan()
         {
             return stan.GetType().Name;
@@ -79,34 +100,34 @@ public partial class Program
             this.stan = stan;
         }
 
-        // Prosi obecny stan o zmianê stanu zadania na Wykonane
+        // Prosi obecny stan o zmianÄ™ stanu zadania na Wykonane
         public void OznaczJakoWykonane()
         {
             stan.wykonane(this);
         }
 
-        // Prosi obecny stan o zmianê stanu zadania na Aktywne
+        // Prosi obecny stan o zmianÄ™ stanu zadania na Aktywne
         public void OznaczJakoAktywne()
         {
             stan.aktywne(this);
         }
 
-        // Prosi obecny stan o zmianê stanu zadania na Zaleg³e
+        // Prosi obecny stan o zmianÄ™ stanu zadania na ZalegÅ‚e
         public void OznaczJakoZalegle()
         {
             stan.zalegle(this);
         }
 
 
-        // Zwraca true/false zale¿nie od obecnego stanu zadania;
-        // jeœli Zadanie zosta³o wykonane - false; jeœli nie, porównuje obecny czas z terminem Zadania
+        // Zwraca true/false zaleÅ¼nie od obecnego stanu zadania;
+        // jeÅ›li Zadanie zostaÅ‚o wykonane - false; jeÅ›li nie, porÃ³wnuje obecny czas z terminem Zadania
         public bool SprawdzCzyZalegle()
         {
             // Sprawdzamy czy obecny stan jest stanem Wykonane
             if (stan.GetType() == typeof(StanWykonane))
                 return false;
 
-            // Porównuje czas obecny z wyznaczonym terminem zadania
+            // PorÃ³wnuje czas obecny z wyznaczonym terminem zadania
             return DateTime.Now > termin;
         }
 
@@ -114,7 +135,7 @@ public partial class Program
         // Wypisuje podstawowe informacje o zadaniu
         public override string WypiszInformacje()
         {
-            return $"[ZADANIE] ID: {id} | Tytu³: {tytul} | Treœæ: {tresc} | Priorytet: {priorytet} | Termin: {termin:d}";
+            return $"[ZADANIE] ID: {id} | TytuÅ‚: {tytul} | TreÅ›Ä‡: {tresc} | Priorytet: {priorytet} | Termin: {termin:d}";
         }
 
         // Nadpisanie ToString() dla wygodnego wypisywania Zadania
@@ -126,12 +147,12 @@ public partial class Program
 
 
 
-    // Stany Zadañ
+    // Stany ZadaÅ„
     //
-    // Interfejs stanów Zadania (Wzorzec State)
+    // Interfejs stanÃ³w Zadania (Wzorzec State)
     public interface IStanZadania
     {
-        // Metody wykorzysywane przez ka¿dy Stan
+        // Metody wykorzysywane przez kaÅ¼dy Stan
         public void wykonane(Zadanie zadanie);
         public void aktywne(Zadanie zadanie);
         public void zalegle(Zadanie zadanie);
@@ -145,19 +166,19 @@ public partial class Program
         // Ponowienie tego stanu
         public void wykonane(Zadanie zadanie)
         {
-            Console.WriteLine("Zadanie ju¿ jest oznaczone jako Wykonane!");
+            Console.WriteLine("Zadanie juÅ¼ jest oznaczone jako Wykonane!");
         }
 
         // Zmiana stanu z Wykonane na Aktywne
         public void aktywne(Zadanie zadanie)
         {
-            Console.WriteLine("Zadanie zosta³o Wykonane, nie mo¿na zmieniæ go spowrotem na Aktywne.");
+            Console.WriteLine("Zadanie zostaÅ‚o Wykonane, nie moÅ¼na zmieniÄ‡ go spowrotem na Aktywne.");
         }
 
-        // Zmiana stanu z Wykonane na Zaleg³e
+        // Zmiana stanu z Wykonane na ZalegÅ‚e
         public void zalegle(Zadanie zadanie)
         {
-            Console.WriteLine("Zadanie zosta³o Wykonane, nie mo¿na zmieniæ go na Zaleg³e.");
+            Console.WriteLine("Zadanie zostaÅ‚o Wykonane, nie moÅ¼na zmieniÄ‡ go na ZalegÅ‚e.");
         }
     }
 
@@ -174,68 +195,69 @@ public partial class Program
         // Ponowienie tego stanu
         public void aktywne(Zadanie zadanie)
         {
-            Console.WriteLine("Zadanie ju¿ jest oznaczone jako Aktywne!");
+            Console.WriteLine("Zadanie juÅ¼ jest oznaczone jako Aktywne!");
         }
 
-        // Zmiana stanu z Aktywne na Zaleg³e
+        // Zmiana stanu z Aktywne na ZalegÅ‚e
         public void zalegle(Zadanie zadanie)
         {
-            Console.WriteLine("Zmieniono stan Zadania z Aktywnego na Zaleg³e.");
+            Console.WriteLine("Zmieniono stan Zadania z Aktywnego na ZalegÅ‚e.");
             zadanie.ZmienStan(new StanZalegle());
         }
     }
 
-    // Zadanie zaleg³e
+    // Zadanie zalegÅ‚e
     public class StanZalegle : IStanZadania
     {
-        // Zmiana stanu z Zaleg³e na Wykonane
+        // Zmiana stanu z ZalegÅ‚e na Wykonane
         public void wykonane(Zadanie zadanie)
         {
-            Console.WriteLine("Zmieniono stan Zadania z Zaleg³ego na Wykonane.");
+            Console.WriteLine("Zmieniono stan Zadania z ZalegÅ‚ego na Wykonane.");
             zadanie.ZmienStan(new StanWykonane());
         }
 
-        // Zmiana stanu z Zaleg³e na Aktywne
+        // Zmiana stanu z ZalegÅ‚e na Aktywne
         public void aktywne(Zadanie zadanie)
         {
-            // Zadanie Zaleg³e mo¿na zmieniæ na Aktywne tylko jeœli jego termin nie up³yn¹³
-            // (np. w przypadku gdy Zadanie zostanie oznaczone jako Zaleg³e, ale jego termin zostanie zmieniony i ma
-            // ono zostaæ oznaczone jako Aktywne)
+            // Zadanie ZalegÅ‚e moÅ¼na zmieniÄ‡ na Aktywne tylko jeÅ›li jego termin nie upÅ‚ynÄ…Å‚
+            // (np. w przypadku gdy Zadanie zostanie oznaczone jako ZalegÅ‚e, ale jego termin zostanie zmieniony i ma
+            // ono zostaÄ‡ oznaczone jako Aktywne)
             if (zadanie.SprawdzCzyZalegle())
             {
-                Console.WriteLine("Zmieniono stan Zadania z Zaleg³ego na Aktywne.");
+                Console.WriteLine("Zmieniono stan Zadania z ZalegÅ‚ego na Aktywne.");
                 zadanie.ZmienStan(new StanAktywne());
             }
             else
             {
-                Console.WriteLine("Zadanie wci¹¿ jest Zaleg³e, nie mo¿na zmieniæ go spowrotem na Aktywne, chyba ¿e zmieni siê termin wykonania Zadania.");
+                Console.WriteLine("Zadanie wciÄ…Å¼ jest ZalegÅ‚e, nie moÅ¼na zmieniÄ‡ go spowrotem na Aktywne, chyba Å¼e zmieni siÄ™ termin wykonania Zadania.");
             }
         }
 
         // Ponowienie tego stanu
         public void zalegle(Zadanie zadanie)
         {
-            Console.WriteLine("Zadanie ju¿ jest oznaczone jako Zaleg³e!");
+            Console.WriteLine("Zadanie juÅ¼ jest oznaczone jako ZalegÅ‚e!");
         }
     }
 
 
 
 
-    // Klasa Mened¿er Zadañ (Wzorzec Singleton)
+    // Klasa MenedÅ¼er ZadaÅ„ (Wzorzec Singleton)
     public class MenedzerZadan
     {
         // Pola
-        private static MenedzerZadan instancja;  // Singleton; instancja Fabryki Zadañ
-        private FabrykaZadan fabryka;  // WskaŸnik na Fabrykê zadañ
-        private List<Zadanie> zadania;  // Lista wszystkich Zadañ w programie
+        private static MenedzerZadan instancja;  // Singleton; instancja Fabryki ZadaÅ„
+        private FabrykaZadan fabryka;  // WskaÅºnik na FabrykÄ™ zadaÅ„
+        private List<Zadanie> zadania;  // Lista wszystkich ZadaÅ„ w programie
         public List<Zadanie> Zadania  // Publiczny getter
         {
             get { return zadania; }
         }
-        private HashSet<int> IDZadan = new();  // HashSet unikalnych ID Zadañ. ID siê nie powtarzaj¹.
+        private HashSet<int> IDZadan = new();  // HashSet unikalnych ID ZadaÅ„. ID siÄ™ nie powtarzajÄ….
 
-
+        private ZadanieBuilder _builder;
+        
         // Prywatny Konstruktor
         private MenedzerZadan()
         {
@@ -255,68 +277,68 @@ public partial class Program
         }
 
 
-        // Utworzenie nowego Zadania poprzez Fabrykê 
+        // Utworzenie nowego Zadania poprzez FabrykÄ™ 
         public void UtworzZadaniePrzezFabryke(string tytul, string tresc, Priorytet priorytet, DateTime termin, List<string> tagi = null)
         {
-            // Lista stringów 'tagi' podana do metody zawiera nazwy Tagów, które powinny zostaæ przypisane do
-            // nowo utworzonej notatki. Te tagi nie koniecznie istniej¹, wiêc zajmie siê tym Fabryka.
+            // Lista stringÃ³w 'tagi' podana do metody zawiera nazwy TagÃ³w, ktÃ³re powinny zostaÄ‡ przypisane do
+            // nowo utworzonej notatki. Te tagi nie koniecznie istniejÄ…, wiÄ™c zajmie siÄ™ tym Fabryka.
 
-            // Utworzenie Zadania poprzez Fabrykê
+            // Utworzenie Zadania poprzez FabrykÄ™
             Zadanie zadanie = (Zadanie)fabryka.UtworzWpis(tytul, tresc, priorytet, termin, tagi);
-            // Dodajemy nowe Zadanie do listy mened¿era
+            // Dodajemy nowe Zadanie do listy menedÅ¼era
             zadania.Add(zadanie);
         }
 
-        // Metoda wybieraj¹ca unikalne ID dla Zadania, zwraca to ID.
+        // Metoda wybierajÄ…ca unikalne ID dla Zadania, zwraca to ID.
         public int WybierzIDZadania()
         {
             int id = 0;  // Nowe ID zaczyna odliczanie od 0
-            // Pêtla od 0 w górê, przez HashSet ID, a¿ znajdziemy nieu¿yte ID.
+            // PÄ™tla od 0 w gÃ³rÄ™, przez HashSet ID, aÅ¼ znajdziemy nieuÅ¼yte ID.
             while (IDZadan.Contains(id))
             {
                 id++;
             }
 
-            // Dane ID nie jest u¿ywane, dodajemy je do HashSetu.
+            // Dane ID nie jest uÅ¼ywane, dodajemy je do HashSetu.
             IDZadan.Add(id);
             return id;
         }
 
-        // Usuwa Zadanie z listy i wypisuje jego zawartoœæ
+        // Usuwa Zadanie z listy i wypisuje jego zawartoÅ›Ä‡
         public void UsunZadanie(Zadanie zadanie)
         {
             if (zadania.Remove(zadanie))
             {
-                // Usuniêcie danej Notatki z Listy Notatek Tagów przypisanych do danej Notatki
+                // UsuniÄ™cie danej Notatki z Listy Notatek TagÃ³w przypisanych do danej Notatki
                 foreach (Tag tag in zadanie.tagi)
                 {
                     tag.UsunWpis(zadanie);
                 }
 
-                Console.WriteLine("Usuniêto zadanie:");
+                Console.WriteLine("UsuniÄ™to zadanie:");
                 WypiszZadanie(zadanie);
             }
             else
             {
-                Console.WriteLine("Nie znaleziono zadania do usuniêcia.");
+                Console.WriteLine("Nie znaleziono zadania do usuniÄ™cia.");
             }
         }
 
 
-        // Dodaje podany Tag do danego Zadania. Zwraca true jeœli dodanie zakoñczy³o siê sukcesem.
+        // Dodaje podany Tag do danego Zadania. Zwraca true jeÅ›li dodanie zakoÅ„czyÅ‚o siÄ™ sukcesem.
         public bool DodajTagDoZadania(Zadanie zadanie, Tag tag)
         {
             return zadanie.DodajTag(tag);
         }
 
-        // Usuwa podany Tag z danego Zadania. Zwraca true jeœli usuniêcie zakoñczy³o siê sukcesem.
+        // Usuwa podany Tag z danego Zadania. Zwraca true jeÅ›li usuniÄ™cie zakoÅ„czyÅ‚o siÄ™ sukcesem.
         public bool UsunTagZZadania(Zadanie zadanie, Tag tag)
         {
             return zadanie.UsunTag(tag);
         }
 
 
-        // Wypisanie zawartoœci danego zadania
+        // Wypisanie zawartoÅ›ci danego zadania
         public void WypiszZadanie(Zadanie zadanie)
         {
             if (zadanie != null)
@@ -345,7 +367,7 @@ public partial class Program
 
             foreach (var z in zadania)
             {
-                // zak³adamy, ¿e Wpis ma dostêp do tytulu (getter)
+                // zakÅ‚adamy, Å¼e Wpis ma dostÄ™p do tytulu (getter)
                 if (z.WypiszInformacje().Contains(fraza))
                 {
                     wynik.Add(z);
@@ -381,7 +403,7 @@ public partial class Program
             });
         }
 
-        // Sortowanie listy zadañ po priorytecie malej¹co (wysoki priorytet pierwszy)
+        // Sortowanie listy zadaÅ„ po priorytecie malejÄ…co (wysoki priorytet pierwszy)
         public void SortujZadaniaPoPriorytecie(List<Zadanie> lista)
         {
             lista.Sort(delegate (Zadanie a, Zadanie b)
@@ -392,7 +414,7 @@ public partial class Program
 
 
 
-        // Oznacza Zadania z podanej Listy Zadañ jako wykonane
+        // Oznacza Zadania z podanej Listy ZadaÅ„ jako wykonane
         public void OznaczZadaniaJakowykonane(List<Zadanie> lista)
         {
             foreach (var z in lista)
@@ -401,13 +423,13 @@ public partial class Program
             }
         }
 
-        // Zwraca Listê Zadañ zaleg³ych
+        // Zwraca ListÄ™ ZadaÅ„ zalegÅ‚ych
         public List<Zadanie> WybierzZalegle()
         {
             // Lista pomocnicza
             List<Zadanie> zalegle = new List<Zadanie>();
 
-            // Dodanie zaleg³ych Zadañ do Listy pomocniczej
+            // Dodanie zalegÅ‚ych ZadaÅ„ do Listy pomocniczej
             foreach (var z in zadania)
             {
                 if (z.SprawdzCzyZalegle())
@@ -420,7 +442,7 @@ public partial class Program
         // Wypisuje wszystkie Zadania
         public void WypiszZadania()
         {
-            // Dzia³¹ tylko gdy Lista zadañ nie jest pusta
+            // DziaÅ‚Ä… tylko gdy Lista zadaÅ„ nie jest pusta
             if (zadania.Count > 0)
             {
                 foreach (Zadanie z in zadania)
@@ -432,25 +454,25 @@ public partial class Program
     }
 
 
-    // Fabryka Zadañ
+    // Fabryka ZadaÅ„
     public class FabrykaZadan : FabrykaWpisow
     {
         // Konstruktor
         public FabrykaZadan() : base() { }
 
 
-        // Nadpisanie metody fabrykuj¹cej wpis
+        // Nadpisanie metody fabrykujÄ…cej wpis
         public override Wpis UtworzWpis(string tytul, string tresc, Priorytet priorytet, DateTime termin, List<string> nazwyTagow)
         {
             List<Tag> tagi = null;
             if (nazwyTagow != null)
             {
-                // Mened¿erTagów zajmuje siê znalezieniem i zwróceniem odpowiednich Tagów.
-                tagi = new List<Tag>();  // Rzeczywista Lista Tagów, przekazywana do Zadania
+                // MenedÅ¼erTagÃ³w zajmuje siÄ™ znalezieniem i zwrÃ³ceniem odpowiednich TagÃ³w.
+                tagi = new List<Tag>();  // Rzeczywista Lista TagÃ³w, przekazywana do Zadania
                 foreach (string nazwaTagu in nazwyTagow)
                 {
-                    // Pytamy Mened¿eraTagów o zwrócenie wskaŸnika na dany Tag.
-                    // Jeœli zwróci 'null', dany Tag nie istnieje, wiêc go nie dodajemy
+                    // Pytamy MenedÅ¼eraTagÃ³w o zwrÃ³cenie wskaÅºnika na dany Tag.
+                    // JeÅ›li zwrÃ³ci 'null', dany Tag nie istnieje, wiÄ™c go nie dodajemy
                     Tag tag = MenedzerTagow.GetterInstancji().ZwrocTag(nazwaTagu);
                     if (tag != null)
                     {
@@ -462,9 +484,9 @@ public partial class Program
             IStanZadania domyslnyStan = new StanAktywne();
 
 
-            // W³aœciwe utworzenie Zadania na podstawie powy¿szych danych
+            // WÅ‚aÅ›ciwe utworzenie Zadania na podstawie powyÅ¼szych danych
             Zadanie zadanie = new Zadanie(tytul, tresc, domyslnyStan, priorytet, termin, tagi);
-            // Dodanie Zadania do listy Zadañ wszystkich wybranych Tagów
+            // Dodanie Zadania do listy ZadaÅ„ wszystkich wybranych TagÃ³w
             if (tagi != null)
             {
                 foreach (Tag tag in tagi)
@@ -474,7 +496,7 @@ public partial class Program
             }
 
 
-            // Utworzenie i zwrócenie nowego Zadania 
+            // Utworzenie i zwrÃ³cenie nowego Zadania 
             return zadanie;
         }
 
