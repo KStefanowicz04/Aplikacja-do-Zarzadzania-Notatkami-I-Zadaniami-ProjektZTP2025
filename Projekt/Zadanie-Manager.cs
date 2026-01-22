@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Formats.Asn1;
@@ -7,16 +8,6 @@ using static Program;
 
 public partial class Program
 {
-    // Interfejs stanów Zadania (Wzorzec State)
-    public interface IStanZadania
-    {
-        // Metody wykorzysywane przez ka¿dy Stan
-        public void wykonane(Zadanie zadanie);
-        public void aktywne(Zadanie zadanie);
-        public void zalegle(Zadanie zadanie);
-    }
-
-
     public enum Priorytet
     {
         Niski,
@@ -55,16 +46,18 @@ public partial class Program
 
         // Metody
 
+        // Getter priorytetu
         public Priorytet Priorytet
         {
             get { return priorytet; }
         }
-        // Zwraca termin wykonania zadania.
-        // pole "termin" jest prywatne i nie mo¿e byæ bezpoœrednio odczytywane poza klas¹ Zadanie (np. przez Mened¿eraZadañ).
+        // Getter temrminu Zadania
         public DateTime ZwrocTermin()
         {
             return termin;
         }
+
+
         // Edytowanie zadania
         public override void Edytuj(string tytul, string tresc, Priorytet priorytet, DateTime termin)
         {
@@ -73,49 +66,43 @@ public partial class Program
             this.termin = termin;
         }
 
-        // Zmienia stan Zadania na wykonane
-        public void OznaczJakoWykonane()
-        {
-            //stan = IStanZadania.wykonane;
-            //ZmienStan();
-        }
 
-
-        // Zwrócenie nazwy obecnego stanu Zadania w formie string
+        // Zwraca nazwê obecnego stanu Zadania w formie string
         public string ZwrocStan()
         {
             return stan.GetType().Name;
         }
 
-        // Zmiana obecnego stanu zadania
+        // Zmienia obecny stan zadania na ten podany jako parametr
         public void ZmienStan(IStanZadania stan)
         {
             this.stan = stan;
         }
 
-        // Zmienia obecny stan za pomoc¹ IStanZadania na Wykonane
-        public void StanWykonane()
+        // Prosi obecny stan o zmianê stanu zadania na Wykonane
+        public void OznaczJakoWykonane()
         {
             stan.wykonane(this);
         }
 
-        // Zmienia obecny stan za pomoc¹ IStanZadania na Aktywne
-        public void StanAktywne()
+        // Prosi obecny stan o zmianê stanu zadania na Aktywne
+        public void OznaczJakoAktywne()
         {
             stan.aktywne(this);
         }
 
-        // Zmienia obecny stan za pomoc¹ IStanZadania na Zaleg³e
-        public void StanZalegle()
+        // Prosi obecny stan o zmianê stanu zadania na Zaleg³e
+        public void OznaczJakoZalegle()
         {
             stan.zalegle(this);
         }
 
-        // Zwraca true/false zale¿nie od obecnego stanu zadania
+
+        // Zwraca true/false zale¿nie od obecnego stanu zadania;
+        // jeœli Zadanie zosta³o wykonane - false; jeœli nie, porównuje obecny czas z terminem Zadania
         public bool SprawdzCzyZalegle()
         {
-            // Porównanie obecnego typu zmiennej stan z klas¹ StanWykonane;
-            // sprawdzamy czy obecny stan jest stanem Wykonane
+            // Sprawdzamy czy obecny stan jest stanem Wykonane
             if (stan.GetType() == typeof(StanWykonane))
                 return false;
 
@@ -123,17 +110,31 @@ public partial class Program
             return DateTime.Now > termin;
         }
 
+
         // Wypisuje podstawowe informacje o zadaniu
         public override string WypiszInformacje()
         {
             return $"[ZADANIE] ID: {id} | Tytu³: {tytul} | Treœæ: {tresc} | Priorytet: {priorytet} | Termin: {termin:d}";
         }
 
-        // Nadpisanie ToString() dla wygodnego wypisywania notatki
+        // Nadpisanie ToString() dla wygodnego wypisywania Zadania
         public override string ToString()
         {
             return WypiszInformacje();
         }
+    }
+
+
+
+    // Stany Zadañ
+    //
+    // Interfejs stanów Zadania (Wzorzec State)
+    public interface IStanZadania
+    {
+        // Metody wykorzysywane przez ka¿dy Stan
+        public void wykonane(Zadanie zadanie);
+        public void aktywne(Zadanie zadanie);
+        public void zalegle(Zadanie zadanie);
     }
 
     // Konkretne stany Zadania
@@ -144,19 +145,19 @@ public partial class Program
         // Ponowienie tego stanu
         public void wykonane(Zadanie zadanie)
         {
-            Console.WriteLine("Zadanie ju¿ zosta³o wykonane");
+            Console.WriteLine("Zadanie ju¿ jest oznaczone jako Wykonane!");
         }
 
         // Zmiana stanu z Wykonane na Aktywne
         public void aktywne(Zadanie zadanie)
         {
-            Console.WriteLine("Zmiana stanu zadania z wykonane na aktywne");
+            Console.WriteLine("Zadanie zosta³o Wykonane, nie mo¿na zmieniæ go spowrotem na Aktywne.");
         }
 
         // Zmiana stanu z Wykonane na Zaleg³e
         public void zalegle(Zadanie zadanie)
         {
-            Console.WriteLine("Zmiana stanu zadania z wykonane na zaleg³e");
+            Console.WriteLine("Zadanie zosta³o Wykonane, nie mo¿na zmieniæ go na Zaleg³e.");
         }
     }
 
@@ -166,19 +167,21 @@ public partial class Program
         // Zmiana stanu z Aktywne na Wykonane
         public void wykonane(Zadanie zadanie)
         {
-            Console.WriteLine("Zmiana stanu zadania z aktywne na wykonane");
+            Console.WriteLine("Zmieniono stan Zadania z Aktywnego na Wykonane.");
+            zadanie.ZmienStan(new StanWykonane());
         }
 
         // Ponowienie tego stanu
         public void aktywne(Zadanie zadanie)
         {
-            Console.WriteLine("Zadanie pozostaje aktywne");
+            Console.WriteLine("Zadanie ju¿ jest oznaczone jako Aktywne!");
         }
 
         // Zmiana stanu z Aktywne na Zaleg³e
         public void zalegle(Zadanie zadanie)
         {
-            Console.WriteLine("Zmiana stanu zadania z aktywne na zaleg³e");
+            Console.WriteLine("Zmieniono stan Zadania z Aktywnego na Zaleg³e.");
+            zadanie.ZmienStan(new StanZalegle());
         }
     }
 
@@ -188,19 +191,31 @@ public partial class Program
         // Zmiana stanu z Zaleg³e na Wykonane
         public void wykonane(Zadanie zadanie)
         {
-            Console.WriteLine("Zmiana stanu zadania z zaleg³e na wykonane");
+            Console.WriteLine("Zmieniono stan Zadania z Zaleg³ego na Wykonane.");
+            zadanie.ZmienStan(new StanWykonane());
         }
 
         // Zmiana stanu z Zaleg³e na Aktywne
         public void aktywne(Zadanie zadanie)
         {
-            Console.WriteLine("Zmiana stanu zadania z zaleg³e na aktywne");
+            // Zadanie Zaleg³e mo¿na zmieniæ na Aktywne tylko jeœli jego termin nie up³yn¹³
+            // (np. w przypadku gdy Zadanie zostanie oznaczone jako Zaleg³e, ale jego termin zostanie zmieniony i ma
+            // ono zostaæ oznaczone jako Aktywne)
+            if (zadanie.SprawdzCzyZalegle())
+            {
+                Console.WriteLine("Zmieniono stan Zadania z Zaleg³ego na Aktywne.");
+                zadanie.ZmienStan(new StanAktywne());
+            }
+            else
+            {
+                Console.WriteLine("Zadanie wci¹¿ jest Zaleg³e, nie mo¿na zmieniæ go spowrotem na Aktywne, chyba ¿e zmieni siê termin wykonania Zadania.");
+            }
         }
 
         // Ponowienie tego stanu
         public void zalegle(Zadanie zadanie)
         {
-            Console.WriteLine("Zadanie pozostaje zaleg³e");
+            Console.WriteLine("Zadanie ju¿ jest oznaczone jako Zaleg³e!");
         }
     }
 
