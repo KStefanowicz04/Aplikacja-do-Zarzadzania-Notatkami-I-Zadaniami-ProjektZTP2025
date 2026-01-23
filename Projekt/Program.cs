@@ -438,8 +438,30 @@ public partial class Program
 
                 // Wyszukiwanie
                 case "18":
-                    Console.WriteLine("WYSZUKIWANIE NIE MA IMPLEMENTACJI W MENU GŁÓWNYM");
+                    Console.WriteLine("Podaj frazę do wyszukania:");
+                    string fraza = Console.ReadLine();
+
+                    List<Wpis> wyniki = WyszukajWpisy(fraza);
+
+                    if (wyniki.Count == 0)
+                    {
+                        Console.WriteLine("Brak wyników wyszukiwania.");
+                        break;
+                    }
+
+                    Console.WriteLine("\n=== WYNIKI WYSZUKIWANIA ===");
+                    foreach (Wpis wpis in wyniki)
+                    {
+                        // Dekorator z tagami
+                        DekoratorWpisow deko = new DekoratorTagowy(wpis);
+                        Console.WriteLine(deko.WypiszInformacje());
+                    }
+
                     break;
+
+
+
+
 
                 // W przypadku podania nieodpowiedniej komendy, należy wpisać coś innego.
                 default:
@@ -447,5 +469,42 @@ public partial class Program
                     break;
             }
         }
+    }
+
+
+    // Metoda statyczna przeszukująca wszystkie Wpisy.
+    // Zwraca wszystkie Wpisy zawierające podaną frazę.
+    static List<Wpis> WyszukajWpisy(string fraza)
+    {
+        List<Wpis> wyniki = new List<Wpis>();
+        fraza = fraza.ToLower();
+
+        // Przeszukiwanie Notatek
+        foreach (Notatka n in MenedzerNotatek.GetterInstancji().Notatki)
+        {
+            if (
+                n.tytul.ToLower().Contains(fraza) ||
+                n.tresc.ToLower().Contains(fraza) ||
+                (n.tagi != null && n.tagi.Any(t => t.nazwa.ToLower().Contains(fraza)))
+            )
+            {
+                wyniki.Add(n);
+            }
+        }
+
+        // Przeszukiwanie Zadań
+        foreach (Zadanie z in MenedzerZadan.GetterInstancji().Zadania)
+        {
+            if (
+                z.tytul.ToLower().Contains(fraza) ||
+                z.tresc.ToLower().Contains(fraza) ||
+                (z.tagi != null && z.tagi.Any(t => t.nazwa.ToLower().Contains(fraza)))
+            )
+            {
+                wyniki.Add(z);
+            }
+        }
+
+        return wyniki;
     }
 }
